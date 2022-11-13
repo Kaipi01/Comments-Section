@@ -1,0 +1,16 @@
+{
+  "name": "comments-section",
+  "version": "1.0.0",
+  "description": "![Design preview for the Interactive comments section coding challenge](./design/desktop-preview.jpg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "stylelint": "^14.15.0",
+    "stylelint-config-property-sort-order-smacss": "^9.0.0"
+  }
+}
