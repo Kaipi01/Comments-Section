@@ -4,14 +4,14 @@
 .comment {
   &--reply {
     position: relative;
-    width: 85%;
+    width: 88%;
     margin-left: auto;
 
     &::before {
       content: "";
       display: block;
       position: absolute;
-      left: -40px;
+      left: -10px;
       width: 3px;
       height: calc(100% + 30px);
       background-color: $light-grayish-blue;
@@ -30,6 +30,7 @@
   }
 
   &__info {
+    width: 100%;
   }
 
   &__header {
@@ -58,10 +59,13 @@
     color: $grayish-Blue;
   }
 
-  &__delete-btn {
-    margin-right: 10px;
-    margin-left: auto;
-    color: $soft-red;
+  &__link {
+    color: $moderate-blue;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  &__tool-btn {
     font-size: 1rem;
     font-weight: bold;
 
@@ -74,40 +78,22 @@
     &:active {
       opacity: 0.65;
     }
+  }
+
+  &__delete-btn {
+    margin-right: 10px;
+    margin-left: auto;
+    color: $soft-red;
   }
 
   &__edit-btn {
     margin-right: 10px;
     color: $moderate-blue;
-    font-size: 1rem;
-    font-weight: bold;
-
-    &-icon {
-      margin-right: 3px;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      opacity: 0.65;
-    }
   }
 
   &__reply-btn {
     margin-left: auto;
     color: $moderate-blue;
-    font-size: 1rem;
-    font-weight: bold;
-
-    &-icon {
-      margin-right: 3px;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      opacity: 0.65;
-    }
   }
 
   &__content {
@@ -121,6 +107,7 @@
     align-items: center;
     justify-content: space-between;
     order: -1;
+    min-width: 38px;
     height: 100px;
     padding: 12px 7px;
     border-radius: 10px;
