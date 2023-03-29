@@ -1,0 +1,23 @@
+@use '../utils/variables' as *;
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: $light-gray;
+  color: $dark-blue;
+  font-family: $font-family;
+  font-size: $font-size;
+}
+
+button {
+    transition: $transition;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
