@@ -1,10 +1,11 @@
 export default class Modal {
-    constructor(context, content) {
+    constructor(context, title, content) {
         this.context = context;
+        this.title = title;
         this.content = content;
         this.create();
         this.modalElement = document.querySelector(`.modal`);
-        this.initialize();
+        this.init();
     }
 
     close() {
@@ -15,7 +16,7 @@ export default class Modal {
         this.modalElement.style.display = 'block';
     }
 
-    initialize() {
+    init() {
         this.modalBtns = this.modalElement.querySelectorAll('button')
         this.modalBtns.forEach(btn => btn.addEventListener('click', () => this.close()))
     }
@@ -24,16 +25,13 @@ export default class Modal {
         const template = `
             <dialog class="modal">
                 <header>
-                    <img src="" alt="!" aria-hidden="true">
-                    <h4>Warning</h4>
-                    <button>
-                        <span class="visually-hidden">close modal</span>
-                        <img src="" alt="x" aria-hidden="true">
-                    </button>
+                    <h4>Delete comment</h4>
                 </header>
-                <p>${this.content}</p>
-                <button>Yes</button>
-                <button>No</button>
+                <p>
+                    Are you really sure you want to delete this comment? This will remove the comment and can't be undone.
+                </p>
+                <button>No, cancel</button>
+                <button>Yes, delete</button>
             </dialog>
         `;
         this.context.innerHTML += template;
