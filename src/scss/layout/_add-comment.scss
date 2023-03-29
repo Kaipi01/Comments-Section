@@ -1,0 +1,65 @@
+@use "../utils/variables" as *;
+@use "../utils/visually-hidden" as *;
+
+.add-comment {
+  width: 91%;
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  order: 1;
+  padding: 25px;
+  border-radius: 10px;
+  background-color: $white;
+  margin: 0 auto;
+  gap: 20px;
+
+  &__title {
+    @extend %visually-hidden;
+  }
+
+  &__avatar {
+    width: 50px;
+  }
+
+  &__form {
+    display: flex;
+    align-items: start;
+    order: 1;
+    border-radius: 10px;
+    gap: 20px;
+  }
+
+  &__label {
+    @extend %visually-hidden;
+  }
+
+  &__textarea {
+    display: block;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    min-width: 475px;
+    min-height: 100px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-color: $moderate-blue;
+    resize: none;
+  }
+
+  &__submit {
+    padding: 15px 30px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 10px;
+    background-color: $moderate-blue;
+    color: $white;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    &:hover,
+    &:focus,
+    &:active {
+      opacity: 0.65;
+    }
+  }
+}

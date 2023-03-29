@@ -1,0 +1,7 @@
+@use '../utils/visually-hidden' as *;
+
+.comments {
+    &__title {
+        @extend %visually-hidden;
+    }
+}
