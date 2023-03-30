@@ -2,15 +2,16 @@
 @use "../utils/visually-hidden" as *;
 
 .add-comment {
-  width: 91%;
   display: flex;
+  position: relative;
   align-items: start;
   justify-content: space-between;
   order: 1;
-  padding: 25px;
+  width: 91%;
+  margin: 0 auto;
+  padding:  var(--tiles-padding);
   border-radius: 10px;
   background-color: $white;
-  margin: 0 auto;
   gap: 20px;
 
   &__title {
@@ -19,14 +20,26 @@
 
   &__avatar {
     width: 50px;
+
+    @media (max-width: $mobile) {
+      position: absolute;
+      bottom:  var(--tiles-padding);
+      left:  var(--tiles-padding);
+    }
   }
 
   &__form {
+    width: 100%;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     order: 1;
     border-radius: 10px;
     gap: 20px;
+
+    @media (max-width: $mobile) {
+      flex-direction: column;
+      align-items: flex-end;
+    }
   }
 
   &__label {
@@ -35,10 +48,7 @@
 
   &__textarea {
     display: block;
-    width: -webkit-max-content;
-    width: -moz-max-content;
-    width: max-content;
-    min-width: 475px;
+    width: 100%;
     min-height: 100px;
     padding: 10px 20px;
     border-radius: 10px;
