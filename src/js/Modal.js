@@ -24,14 +24,16 @@ export default class Modal {
     create() {
         const template = `
             <dialog class="modal">
-                <header>
-                    <h4>Delete comment</h4>
-                </header>
-                <p>
-                    Are you really sure you want to delete this comment? This will remove the comment and can't be undone.
-                </p>
-                <button>No, cancel</button>
-                <button>Yes, delete</button>
+                <article class="modal__content">
+                    <header>
+                        <h4 class="modal__title">Delete comment</h4>
+                    </header>
+                    <p class="modal__text">
+                        Are you really sure you want to delete this comment? This will remove the comment and can't be undone.
+                    </p>
+                    <button class="modal__btn modal__btn-no">No, cancel</button>
+                    <button class="modal__btn modal__btn-yes">Yes, delete</button>
+                </article>
             </dialog>
         `;
         this.context.innerHTML += template;
