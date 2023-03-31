@@ -1,14 +1,14 @@
 import * as utils from './utils.js';
 
 export default class Comment {
-    constructor({ context, id, author, creationDate, content, avatar = '', votes = 0, replyingTo } = properties) {
+    constructor({ context, id, author, createdAt, content, avatar = '', score = 0, replyingTo } = properties) {
         this.context = context;
         this.id = id;
         this.author = author;
-        this.creationDate = creationDate;
+        this.createdAt = createdAt;
         this.content = content;
         this.avatar = avatar;
-        this.votes = votes;
+        this.score = score;
         this.replyingTo = replyingTo;
         this.isVoted = false;
         this.create();
@@ -22,8 +22,8 @@ export default class Comment {
 
     upVote() {
         this.voteNumberElement.textContent = this.isVoted
-            ? this.votes += 2
-            : ++this.votes;
+            ? this.score += 2
+            : ++this.score;
         this.isVoted = true;
         utils.disableBtn(this.upVoteBtn)
         utils.enableBtn(this.downVoteBtn)
@@ -31,8 +31,8 @@ export default class Comment {
 
     downVote() {
         this.voteNumberElement.textContent = this.isVoted
-            ? this.votes -= 2
-            : --this.votes;
+            ? this.score -= 2
+            : --this.score;
         this.isVoted = true;
         utils.disableBtn(this.downVoteBtn)
         utils.enableBtn(this.upVoteBtn)
@@ -92,7 +92,7 @@ export default class Comment {
     generateDateCreated() {
         return `
             <time class="comment__created-at" datetime="2022-10-13">
-                ${this.creationDate}
+                ${this.createdAt}
             </time>
         `
     }
@@ -121,7 +121,7 @@ export default class Comment {
     generateCommentVotes() {
         return `
             <div class="comment__votes">
-                <p class="comment__score">${this.votes}</p>
+                <p class="comment__score">${this.score}</p>
                 <button class="comment__btn-vote comment__btn-vote-up">
                     <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="comment__btn-vote-icon">
                         <path
