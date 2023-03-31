@@ -16,6 +16,10 @@
       height: calc(100% + 30px);
       background-color: $light-grayish-blue;
     }
+
+    &:last-child::before {
+      height: 100%;
+    }
   }
 
   &__container {
@@ -200,14 +204,6 @@
       .comment__btn-vote-icon {
         fill: $moderate-blue;
       }
-    }
-  }
-
-  &__replies {
-    list-style: none;
-
-    li:last-child > .comment--reply::before {
-      height: 100%;
     }
   }
 }
