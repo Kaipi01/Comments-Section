@@ -1,0 +1,71 @@
+@use "../utils/variables" as *;
+@use "../utils/visually-hidden" as *;
+
+.form {
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 90%;
+  margin: 0 auto;
+  padding: var(--tiles-padding);
+  border-radius: 10px;
+  background-color: $white;
+  gap: 20px;
+
+  &--reply {
+    margin: -15px auto 0 auto;
+  }
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  &__avatar {
+    width: 50px;
+
+    @media (max-width: $mobile) {
+      position: absolute;
+      bottom: var(--tiles-padding);
+      left: var(--tiles-padding);
+    }
+  }
+
+  &__label {
+    @extend %visually-hidden;
+  }
+
+  &__textarea {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-color: $moderate-blue;
+    resize: none;
+  }
+
+  &__submit {
+    padding: 15px 30px;
+    transition: all 0.3s ease-in-out;
+    border-radius: 10px;
+    background-color: $moderate-blue;
+    color: $white;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    &:hover,
+    &:focus,
+    &:active {
+      opacity: 0.65;
+    }
+  }
+
+  &__delete {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+  }
+}
