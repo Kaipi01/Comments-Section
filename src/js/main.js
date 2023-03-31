@@ -31,7 +31,7 @@ new Comment({
   context: commentsSection,
   id: 45,
   author: 'Mati',
-  creationDate: 'Today',
+  createdAt: 'Today',
   content: 'Lorem palorem',
   avatar: './images/avatars/image-juliusomo.png',
   votes: 1,
