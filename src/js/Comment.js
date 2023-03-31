@@ -12,6 +12,12 @@ export default class Comment {
         this.replyingTo = replyingTo;
         this.isVoted = false;
         this.create();
+        this.attachElements();
+        this.setEventListeners();
+    }
+
+    create() {
+        this.context.append(this.generateComment());
     }
 
     upVote() {
@@ -32,41 +38,43 @@ export default class Comment {
         utils.enableBtn(this.upVoteBtn)
     }
 
-    create() {
-        const template = `
-            ${this.replyingTo ? '<li>' : ''}
-                <article id="comment${this.id}" class="comment ${this.replyingTo ? 'comment--reply' : ''}">
-                    <div class="comment__container">
-                        <div class="comment__info">
-                            <header class="comment__header">
-                                ${this.generateAvatar()}
-                                ${this.generateTitle()}
-                                ${this.generateDateCreated()}
-                                ${this.generateReplayButton()}
-                            </header>
-                            ${this.generateContent()}
-                        </div>
-                        ${this.generateCommentVotes()}
-                    </div>
-                    <ul class="comment__replies"></ul>
-                </article>
-            ${this.replyingTo ? '</li>' : ''}
-        `;
-        this.context.innerHTML += template;
+    attachElements() {
+        this.commentElement = document.querySelector(`#comment${this.id}`)
+        this.voteNumberElement = this.commentElement.querySelector(`.comment__score`)
+        this.upVoteBtn = this.commentElement.querySelector(`.comment__btn-vote-up`)
+        this.downVoteBtn = this.commentElement.querySelector(`.comment__btn-vote-down`)
     }
 
-    init() {
-        const commentElement = document.querySelector(`#comment${this.id}`);
-        console.log(commentElement)
-        this.voteNumberElement = commentElement.querySelector('.comment__score')
-        this.upVoteBtn = commentElement.querySelector('.comment__btn-vote-up')
-        this.downVoteBtn = commentElement.querySelector('.comment__btn-vote-down')
+    setEventListeners() {
         this.upVoteBtn.addEventListener('click', () => this.upVote())
         this.downVoteBtn.addEventListener('click', () => this.downVote())
     }
 
-    getCreationDateFormat() {
-        return this.creationDate;
+    generateComment() {
+        const comment = document.createElement('article')
+        comment.className = `comment ${this.replyingTo ? 'comment--reply' : ''}`
+        comment.id = `comment${this.id}`
+        comment.innerHTML = this.generateCommentTemplate();
+
+        return comment;
+    }
+
+    generateCommentTemplate() {
+        return `
+            <div class="comment__container">
+                <div class="comment__info">
+                    <header class="comment__header">
+                        ${this.generateAvatar()}
+                        ${this.generateTitle()}
+                        ${this.generateDateCreated()}
+                        ${this.generateReplayButton()}
+                    </header>
+                    ${this.generateContent()}
+                </div>
+                ${this.generateCommentVotes()}
+            </div>
+            <ul class="comment__replies"></ul>
+        `;
     }
 
     generateAvatar() {
@@ -74,7 +82,11 @@ export default class Comment {
     }
 
     generateTitle() {
-        return `<h3 class="comment__author">${this.author}</h3>`
+        return `
+            <h3 class="comment__author">
+                ${this.author}
+            </h3>
+        `
     }
 
     generateDateCreated() {
@@ -86,7 +98,7 @@ export default class Comment {
     }
 
     generateContent() {
-        const id = this.context.parentNode.id;
+        const id = this.context.parentNode.id
         return `
             <p class="comment__content">
                 ${this.replyingTo
