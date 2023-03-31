@@ -1,0 +1,7 @@
+@use '../utils/visually-hidden' as *;
+
+.section {
+    &__title {
+        @extend %visually-hidden;
+    }
+}
