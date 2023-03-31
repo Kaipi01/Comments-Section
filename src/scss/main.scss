@@ -1,6 +1,6 @@
 @use './base/base';
 @use './layout/content';
-@use './layout/comments';
-@use './layout/add-comment';
+@use './layout/section';
 @use './components/comment';
 @use './components/modal';
+@use './components/form';
