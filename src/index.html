@@ -15,14 +15,13 @@
     <section class="comments">
       <h1 class="comments__title">Comments</h1>
 
-      <article id="comment1" class="comment" itemscope itemtype="https://schema.org/Comment">
+      <article id="comment1" class="comment">
         <div class="comment__container">
           <div class="comment__info">
             <header class="comment__header">
-              <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar"
-                itemprop="image">
-              <h3 class="comment__author" itemprop="author">amyrobson</h3>
-              <time class="comment__created-at" datetime="2022-10-13" itemprop="dateCreated">
+              <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar">
+              <h3 class="comment__author">amyrobson</h3>
+              <time class="comment__created-at" datetime="2022-10-13">
                 1 month ago
               </time>
               <button class="comment__tool-btn comment__reply-btn">
@@ -30,14 +29,14 @@
                 Reply
               </button>
             </header>
-            <p class="comment__content" itemprop="text">
+            <p class="comment__content">
               Impressive! Though it seems the drag feature could be improved.
               But overall it looks incredible. You've nailed the design and
               the responsiveness at various breakpoints works really well.
             </p>
           </div>
           <div class="comment__votes">
-            <p class="comment__score" itemprop="upvoteCount">12</p>
+            <p class="comment__score">12</p>
             <button class="comment__btn-vote comment__btn-vote-up">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="comment__btn-vote-icon">
                 <path
@@ -60,20 +59,19 @@
             </button>
           </div>
         </div>
-        <ul class="comment__replies"></ul>
+        <div class="comment__replies"></div>
       </article>
 
-      <article id="comment2" class="comment" itemscope itemtype="https://schema.org/Comment">
+      <article id="comment2" class="comment">
         <div class="comment__container">
           <div class="comment__info">
             <header class="comment__header">
-              <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar"
-                itemprop="image">
-              <h3 class="comment__author" itemprop="author">
+              <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar">
+              <h3 class="comment__author">
                 amyrobson
                 <span class="comment__author-badge">you</span>
               </h3>
-              <time class="comment__created-at" datetime="2022-10-13" itemprop="dateCreated">
+              <time class="comment__created-at" datetime="2022-10-13">
                 1 month ago
               </time>
               <button class="comment__tool-btn comment__delete-btn">
@@ -85,7 +83,7 @@
                 Edit
               </button>
             </header>
-            <p class="comment__content" itemprop="text">
+            <p class="comment__content">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab
               molestiae mollitia similique ad minus consequatur quas
               laboriosam eum natus ea nemo temporibus, cum culpa voluptatem
@@ -93,7 +91,7 @@
             </p>
           </div>
           <div class="comment__votes">
-            <p class="comment__score" itemprop="upvoteCount">12</p>
+            <p class="comment__score">12</p>
             <button class="comment__btn-vote comment__btn-vote-up">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="comment__btn-vote-icon">
                 <path
@@ -116,18 +114,16 @@
             </button>
           </div>
         </div>
-        <ul class="comment__replies">
-          <li>
-            <article id="comment3" class="comment comment--reply" itemscope itemtype="https://schema.org/Comment">
+        <div class="comment__replies">
+            <article id="comment3" class="comment comment--reply">
               <div class="comment__container">
                 <div class="comment__info">
                   <header class="comment__header">
-                    <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar"
-                      itemprop="image">
-                    <h3 class="comment__author" itemprop="author">
+                    <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar">
+                    <h3 class="comment__author">
                       amyrobson
                     </h3>
-                    <time class="comment__created-at" datetime="2022-10-13" itemprop="dateCreated">
+                    <time class="comment__created-at" datetime="2022-10-13">
                       1 month ago
                     </time>
                     <button class="comment__tool-btn comment__reply-btn">
@@ -135,7 +131,7 @@
                       Reply
                     </button>
                   </header>
-                  <p class="comment__content" itemprop="text">
+                  <p class="comment__content">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                     Ab molestiae mollitia similique ad minus consequatur quas
                     laboriosam eum natus ea nemo temporibus, cum culpa
@@ -143,7 +139,7 @@
                   </p>
                 </div>
                 <div class="comment__votes">
-                  <p class="comment__score" itemprop="upvoteCount">12</p>
+                  <p class="comment__score">12</p>
                   <button class="comment__btn-vote comment__btn-vote-up">
                     <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="comment__btn-vote-icon">
                       <path
@@ -166,19 +162,17 @@
                   </button>
                 </div>
               </div>
+              <div class="comment__replies"></div>
             </article>
-          </li>
-          <li>
-            <article id="comment4" class="comment comment--reply" itemscope itemtype="https://schema.org/Comment">
+            <article id="comment4" class="comment comment--reply">
               <div class="comment__container">
                 <div class="comment__info">
                   <header class="comment__header">
-                    <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar"
-                      itemprop="image">
-                    <h3 class="comment__author" itemprop="author">
+                    <img class="comment__avatar" src="./images/avatars/image-amyrobson.png" alt="person avatar">
+                    <h3 class="comment__author">
                       amyrobson
                     </h3>
-                    <time class="comment__created-at" datetime="2022-10-13" itemprop="dateCreated">
+                    <time class="comment__created-at" datetime="2022-10-13">
                       1 month ago
                     </time>
                     <button class="comment__tool-btn comment__reply-btn">
@@ -186,7 +180,7 @@
                       Reply
                     </button>
                   </header>
-                  <p class="comment__content" itemprop="text">
+                  <p class="comment__content">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                     Ab molestiae mollitia similique ad minus consequatur quas
                     laboriosam eum natus ea nemo temporibus, cum culpa
@@ -194,7 +188,7 @@
                   </p>
                 </div>
                 <div class="comment__votes">
-                  <p class="comment__score" itemprop="upvoteCount">12</p>
+                  <p class="comment__score">12</p>
                   <button class="comment__btn-vote comment__btn-vote-up">
                     <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="comment__btn-vote-icon">
                       <path
@@ -217,9 +211,9 @@
                   </button>
                 </div>
               </div>
+              <div class="comment__replies"></div>
             </article>
-          </li>
-        </ul>
+        </div>
       </article>
 
     </section>
@@ -235,14 +229,14 @@
         </label>
         <textarea class="add-comment__textarea" name="comment-text" id="comment-text"
           placeholder="Add a comment..."></textarea>
-        <button type="submit" class="add-comment__submit">send</button>
+        <button type="button" class="add-comment__submit">send</button>
       </form>
 
     </section>
-    
+
   </main>
-  
-  
+
+
 </body>
 
 </html>
