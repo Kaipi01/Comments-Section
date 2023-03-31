@@ -1,8 +1,8 @@
 import Comment from "./Comment.js";
 
 export default class UserComment extends Comment {
-    constructor({ context, id, author, creationDate, content, avatar, votes, replyingTo } = properties) {
-        super(context, id, author, creationDate, content, avatar, votes, replyingTo);
+    constructor(properties) {
+        super(properties)
     }
 
     edit() { }
@@ -11,8 +11,9 @@ export default class UserComment extends Comment {
     }
 
     attachElements() {
-        this.editBtn = this.commentElement.querySelector('.comment__edit-btn')
-        this.deleteBtn = this.commentElement.querySelector('.comment__delete-btn')
+        this.commentElement = document.querySelector(`#comment${this.id}`)
+        this.editBtn = this.commentElement.querySelector(`.comment__edit-btn`)
+        this.deleteBtn = this.commentElement.querySelector(`.comment__delete-btn`)
     }
 
     setEventListeners() {
@@ -20,28 +21,23 @@ export default class UserComment extends Comment {
         this.deleteBtn.addEventListener('click', () => this.delete())
     }
 
-    create() {
-        const template = `
-            ${this.replyingTo ? '<li>' : ''}
-                <article id="comment${this.id}" class="comment ${this.replyingTo ? 'comment--reply' : ''}">
-                    <div class="comment__container">
-                        <div class="comment__info">
-                            <header class="comment__header">
-                                ${this.generateAvatar()}
-                                ${this.generateTitle()}
-                                ${this.generateDateCreated()}
-                                ${this.generateDeleteButton()}
-                                ${this.generateEditButton()}
-                            </header>
-                            ${this.generateContent()}
-                        </div>
-                        ${this.generateCommentVotes()}
+    generateCommentTemplate() {
+        return `
+            <div class="comment__container">
+                <div class="comment__info">
+                        <header class="comment__header">
+                            ${this.generateAvatar()}
+                            ${this.generateTitle()}
+                            ${this.generateDateCreated()}
+                            ${this.generateDeleteButton()}
+                            ${this.generateEditButton()}
+                        </header>
+                        ${this.generateContent()}
                     </div>
-                    <ul class="comment__replies"></ul>
-                </article>
-            ${this.replyingTo ? '</li>' : ''}
+                    ${this.generateCommentVotes()}
+                </div>
+            <ul class="comment__replies"></ul>
         `;
-        this.context.innerHTML += template;
     }
 
     generateTitle() {
@@ -69,13 +65,5 @@ export default class UserComment extends Comment {
                 Edit
             </button>
         `
-    }
-
-    upVote() {
-        return;
-    }
-
-    downVote() {
-        return;
     }
 }
