@@ -1,22 +1,36 @@
 export default class Modal {
     constructor(context) {
         this.context = context;
+        this.flag = false;
         this.create();
-        this.init();
+        // this.init();
     }
 
-    close() {
-        this.modalElement.style.display = 'none';
+    // close() {
+    //     this.modalElement.style.display = 'none';
+    // }
+
+    delete() {
+        this.modalElement.remove();
     }
 
     open() {
         this.modalElement.style.display = 'block';
     }
 
+    isAnswerYes() {
+        return this.flag;
+    }
+
     init() {
-        this.modalElement = document.querySelector(`.modal`);
-        this.modalBtns = this.modalElement.querySelectorAll('button')
-        this.modalBtns.forEach(btn => btn.addEventListener('click', () => this.close()))
+        this.modalElement = document.querySelector('.modal');
+        this.modalBtnNo = this.modalElement.querySelector('.modal__btn-no')
+        this.modalBtnYes = this.modalElement.querySelector('.modal__btn-yes')
+        this.modalBtnNo.addEventListener('click', () => this.delete())
+        this.modalBtnYes.addEventListener('click', () => {
+            this.flag = true;
+            this.delete()
+        })
     }
 
     create() {
