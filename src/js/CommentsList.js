@@ -1,4 +1,4 @@
-import { Comment, UserComment } from "./Comment.js";
+import { UserComment, Comment } from "./Comment.js";
 
 export default class CommentsList {
     constructor(userName, userAvatar) {
