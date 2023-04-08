@@ -13,7 +13,7 @@ const comments = new CommentsList(userName, userAvatar)
 
 const form = new Form(addCommentSection, true)
 
-const modal = new Modal(commentsSection)
+// const modal = new Modal(commentsSection)
 
 comments.generateComments(data.comments, commentsSection)
 
