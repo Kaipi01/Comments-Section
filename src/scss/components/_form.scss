@@ -1,5 +1,6 @@
 @use "../utils/variables" as *;
 @use "../utils/visually-hidden" as *;
+@use "../animations/bounceEffect" as *;
 
 .form {
   display: flex;
@@ -12,6 +13,15 @@
   border-radius: 10px;
   background-color: $white;
   gap: 20px;
+
+  &--delete {
+    animation: bounceEffect 0.5s 1 ease-in-out reverse;
+  }
+
+  &--create {
+    -webkit-animation: bounceEffect 0.5s 1 ease-in-out;
+            animation: bounceEffect 0.5s 1 ease-in-out;
+  }
 
   &--reply {
     margin: -15px auto 0 auto;
@@ -43,7 +53,11 @@
     padding: 10px 20px;
     border-radius: 10px;
     border-color: $moderate-blue;
-    resize: none;
+    color: hsl(212, 24%, 26%);
+    font-family: "Rubik", sans-serif;
+    line-height: 1.45;
+    font-size: 16px;
+    resize: vertical;
   }
 
   &__submit {

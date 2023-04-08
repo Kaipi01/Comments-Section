@@ -1,4 +1,7 @@
+@use '../animations/opacityEffect';
+
 .content {
+    animation: opacityEffect 0.8s 1 ease-in-out;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -1,12 +1,23 @@
 @use "../utils/variables" as *;
 @use "../utils/visually-hidden" as *;
+@use "../animations/bounceEffect" as *;
 
 .comment {
+  &--animate {
+    animation: bounceEffect 0.5s 1 ease-in-out;
+  }
+
+  &--delete {
+    .comment__container {
+      animation: bounceEffect 0.5s 1 ease-in-out reverse;
+    }
+  }
+
   &--reply {
     position: relative;
     width: 88%;
-    margin-left: auto;
     margin-right: 5px;
+    margin-left: auto;
 
     &::before {
       content: "";
@@ -32,6 +43,7 @@
     position: relative;
     width: 90%;
     margin: 20px auto;
+    //margin: 10px auto;
     padding: var(--tiles-padding);
     border-radius: 10px;
     background-color: $white;
@@ -111,6 +123,23 @@
     }
   }
 
+  &__update {
+    &-form {
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-top: 15px;
+
+      &--show {
+        display: flex;
+      }
+    }
+
+    &-btn {
+      margin-top: 15px;
+    }
+  }
+
   &__delete-btn {
     margin-right: 10px;
     margin-left: auto;
@@ -135,7 +164,10 @@
     margin-top: 15px;
     overflow: auto;
     line-height: 1.45;
-    //word-wrap: break-word;
+
+    &--hide {
+      display: none;
+    }
   }
 
   &__votes {
@@ -173,6 +205,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &--animate {
+      animation: bounceEffect2 0.5s 1 ease-in-out;
+    }
 
     &-icon {
       width: 11px;
