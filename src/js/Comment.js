@@ -1,6 +1,8 @@
 import * as utils from './utils.js';
+import Form from './Form.js';
+import Modal from './Modal.js';
 
-export default class Comment {
+export class Comment {
     constructor({ context, id, author, createdAt, content, avatar = '', score = 0, replyingTo } = properties) {
         this.context = context;
         this.id = id;
@@ -20,11 +22,24 @@ export default class Comment {
         this.context.append(this.generateComment());
     }
 
+    replayTo(person) {
+        console.log(this.id)
+        const formsReplay = document.querySelectorAll('.form--reply');
+        formsReplay.forEach(form => form.remove())
+        //console.log(this.context.id)
+        //new Form(document.querySelector(`#${this.context.id} .comment__replies`))
+        new Form(document.querySelector(`#comment${this.id} .comment__replies`))
+    }
+
     upVote() {
         this.voteNumberElement.textContent = this.isVoted
             ? this.score += 2
             : ++this.score;
         this.isVoted = true;
+        utils.animate(
+            this.upVoteBtn,
+            'comment__btn-vote--animate'
+        )
         utils.disableBtn(this.upVoteBtn)
         utils.enableBtn(this.downVoteBtn)
     }
@@ -34,6 +49,10 @@ export default class Comment {
             ? this.score -= 2
             : --this.score;
         this.isVoted = true;
+        utils.animate(
+            this.downVoteBtn,
+            'comment__btn-vote--animate'
+        )
         utils.disableBtn(this.downVoteBtn)
         utils.enableBtn(this.upVoteBtn)
     }
@@ -43,11 +62,13 @@ export default class Comment {
         this.voteNumberElement = this.commentElement.querySelector(`.comment__score`)
         this.upVoteBtn = this.commentElement.querySelector(`.comment__btn-vote-up`)
         this.downVoteBtn = this.commentElement.querySelector(`.comment__btn-vote-down`)
+        this.replayBtn = this.commentElement.querySelector('.comment__reply-btn')
     }
 
     setEventListeners() {
         this.upVoteBtn.addEventListener('click', () => this.upVote())
         this.downVoteBtn.addEventListener('click', () => this.downVote())
+        this.replayBtn.addEventListener('click', () => this.replayTo())
     }
 
     generateComment() {
@@ -65,11 +86,13 @@ export default class Comment {
                 <div class="comment__info">
                     <header class="comment__header">
                         ${this.generateAvatar()}
-                        ${this.generateTitle()}
+                        ${this.generateTitleWidthBadge(false)}
                         ${this.generateDateCreated()}
                         ${this.generateReplayButton()}
                     </header>
-                    ${this.generateContent()}
+                    <p class="comment__content">
+                        ${this.generateContent(this.content)}
+                    </p>
                 </div>
                 ${this.generateCommentVotes()}
             </div>
@@ -81,11 +104,9 @@ export default class Comment {
         return `<img class="comment__avatar" src="${this.avatar}" alt="${this.author} avatar">`
     }
 
-    generateTitle() {
+    generateTitleWidthBadge(isUser) {
         return `
-            <h3 class="comment__author">
-                ${this.author}
-            </h3>
+            <h3 class="comment__author">${this.author}${isUser ? '<span class="comment__author-badge">you</span>' : ''}</h3>
         `
     }
 
@@ -97,15 +118,13 @@ export default class Comment {
         `
     }
 
-    generateContent() {
+    generateContent(content) {
         const id = this.context.parentNode.id
         return `
-            <p class="comment__content">
-                ${this.replyingTo
+            ${this.replyingTo
                 ? '<a class="comment__link" href="#' + id + '">@' + this.replyingTo + '</a>'
                 : ''}
-                ${this.content}
-            </p>
+            <span>${content}</span>
         `
     }
 
@@ -143,6 +162,167 @@ export default class Comment {
                     </span>
                 </button>
             </div>
+        `
+    }
+}
+
+export class UserComment extends Comment {
+    constructor(properties) {
+        super(properties)
+    }
+
+    // hideElement(element, isHidden) {
+    //     isHidden 
+    //     ? element.classList.toggle('comment__content--hide')
+    //     : element.classList.toggle('comment__content--hide')
+        
+    // }
+
+    edit() {
+        const currentContent = this.commentContent.querySelector('span').textContent
+
+        // this.commentContent.style.display = "none"
+        // this.commentUpdateForm.style.display = "flex"   
+        this.commentContent.classList.add('comment__content--hide')
+        this.commentUpdateForm.classList.add('comment__update-form--show')
+        this.commentUpdateTextarea.value = currentContent
+
+        this.commentUpdateBtn.addEventListener('click', () => {
+            const updateText = this.commentUpdateTextarea.value
+
+            if (updateText !== '') {
+                this.commentContent.innerHTML = this.generateContent(updateText)
+                // this.commentUpdateForm.style.display = "none"
+                // this.commentContent.style.display = "block"
+                this.commentContent.classList.remove('comment__content--hide')
+                this.commentUpdateForm.classList.remove('comment__update-form--show')
+            }
+        })
+        this.editBtn.addEventListener('click', () => {
+            if (this.commentUpdateForm.classList.contains('comment__update-form--show')) {
+                this.commentContent.innerHTML = this.generateContent(currentContent)
+                this.commentContent.classList.remove('comment__content--hide')
+                this.commentUpdateForm.classList.remove('comment__update-form--show')
+                // this.commentUpdateForm.style.display = "none"
+                // this.commentContent.style.display = "block"
+            }
+        })
+
+        // const contentSpan = this.commentContent.querySelector('span')
+        // const currentContent = contentSpan.textContent
+
+        // this.commentContent.innerHTML = `
+            
+        // `
+        // const updateBtn = this.commentContent.querySelector('button')
+        // const textarea = this.commentContent.querySelector('textarea')
+
+        // textarea.value = currentContent
+
+        // updateBtn.addEventListener('click', () => {
+        //     if (textarea.value !== '') {
+        //         this.commentContent.innerHTML = this.generateContent(textarea.value)
+        //     }
+        // })
+
+        // this.editBtn.addEventListener('click', () => {
+        //     if (!currentContent)
+        //         this.commentContent.innerHTML = this.generateContent(currentContent)
+        // })
+
+        // window.addEventListener('click', (e) =>{ 
+        //     // if (
+        //     //     e.target.className !== 'comment__edit-btn-icon' &&
+        //     //     e.target.className !== 'comment__edit-btn'
+        //     //     ) {
+        //     //     this.commentContent.innerHTML = this.generateContent(currentContent)
+        //     // }
+        //    console.log(e.target.className)
+        //     //this.commentContent.innerHTML = this.generateContent(currentContent)
+        // })
+
+    }
+
+    delete() {
+        const modal = new Modal(this.context)
+        //
+        modal.init()
+        modal.open()
+        console.log(modal.isAnswerYes())
+        if (modal.isAnswerYes()) {
+            this.commentElement.classList.add('comment--delete')
+            setTimeout(() => this.commentElement.remove(), 500)
+        }
+        
+    }
+
+    attachElements() {
+        this.commentElement = document.querySelector(`#comment${this.id}`)
+        this.commentContent = this.commentElement.querySelector('.comment__content')
+        this.editBtn = this.commentElement.querySelector('.comment__edit-btn')
+        this.deleteBtn = this.commentElement.querySelector('.comment__delete-btn')
+        this.voteBtns = this.commentElement.querySelectorAll('.comment__btn-vote')
+        this.commentUpdateForm = this.commentElement.querySelector('.comment__update-form')
+        this.commentUpdateBtn = this.commentElement.querySelector('.comment__update-btn')
+        this.commentUpdateTextarea = this.commentElement.querySelector('.comment__update-textarea')
+        this.voteBtns.forEach(btn => btn.setAttribute('disabled', true))
+        //this.commentUpdateForm.style.display = "none"
+    }
+
+    setEventListeners() {
+        this.editBtn.addEventListener('click', () => this.edit())
+        this.deleteBtn.addEventListener('click', () => this.delete())
+    }
+
+    generateCommentTemplate() {
+        return `
+            <div class="comment__container">
+                <div class="comment__info">
+                        <header class="comment__header">
+                            ${this.generateAvatar()}
+                            ${this.generateTitleWidthBadge(true)}
+                            ${this.generateDateCreated()}
+                            ${this.generateDeleteButton()}
+                            ${this.generateEditButton()}
+                        </header>
+                        <p class="comment__content">
+                            ${this.generateContent(this.content)} 
+                        </p>
+                        ${this.generateUpdateForm()}
+                    </div>
+                    ${this.generateCommentVotes()}
+                </div>
+            <ul class="comment__replies"></ul>
+        `;
+    }
+
+    generateUpdateForm() {
+        return `
+            <form class="comment__update-form">
+                <label class="form__label" for="update-text">
+                    Update comment
+                </label>
+                <textarea class="form__textarea comment__update-textarea" name="update-text" id="update-text"></textarea>
+                <button type="button" class="form__submit comment__update-btn">update</button>
+            </form>
+        `
+    }
+
+    generateDeleteButton() {
+        return `
+            <button class="comment__tool-btn comment__delete-btn">
+                <img class="comment__delete-btn-icon" src="./images/icon-delete.svg" aria-hidden="true" alt="">
+                Delete
+            </button>
+        `
+    }
+
+    generateEditButton() {
+        return `
+            <button class="comment__tool-btn comment__edit-btn">
+                <img class="comment__edit-btn-icon" src="./images/icon-edit.svg" aria-hidden="true" alt="">
+                Edit
+            </button>
         `
     }
 }
