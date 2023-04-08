@@ -1,15 +1,19 @@
-import UserComment from "./UserComment.js";
+import * as utils from './utils.js';
+import { userName, userAvatar } from './main.js';
+import { UserComment } from "./Comment.js";
 
 export default class Form {
-    constructor(context) {
+    constructor(context, isStatic = false) {
         this.context = context;
-        this.id = 'reply-form'
+        this.isStatic = isStatic;
+        this.id = this.isStatic ? 'form' : 'reply-form'
         this.create();
         this.init();
     }
 
     delete() {
-        this.formElement.remove();
+        this.formElement.classList.add('form--delete')
+        setTimeout(() => this.formElement.remove(), 500)
     }
 
     init() {
@@ -18,38 +22,49 @@ export default class Form {
         this.formSubmitBtn = this.formElement.querySelector('.form__submit')
         this.formDeleteBtn = this.formElement.querySelector('.form__delete')
         this.formSubmitBtn.addEventListener('click', (event) => {
-            this.addUserComment(commentContext, replyToPerson)
-            event.preventDefault();
+            this.addUserComment()
+            event.preventDefault()
         })
-        this.formDeleteBtn.addEventListener('click', () => this.delete())
+        if (!this.isStatic)
+            this.formDeleteBtn.addEventListener('click', () => this.delete())
     }
 
-    addUserComment(commentContext, replyToPerson) {
-        const textarea = document.querySelector('.add-comment__textarea')
-      
+    addUserComment() {
+        if (this.formTextarea.value === '') return
+        
+        let replyToPerson
+        const contextParent = this.context.parentNode
+        const commentsSection = document.querySelector('#comments');
+
+        if (contextParent.classList.contains('comment'))
+            replyToPerson = contextParent.querySelector('.comment__author').textContent
+
         new UserComment({
-          context: commentContext,
-          id: unusedNumberID++,
-          author: userName,
-          createdAt: 'Today',
-          content: textarea.value,
-          avatar: userAvatar,
-          score: 0,
-          replyingTo: replyToPerson
+            context: this.isStatic ? commentsSection : this.context,
+            id: utils.generateID(),
+            author: userName,
+            createdAt: 'Today',
+            content: this.formTextarea.value,
+            avatar: userAvatar,
+            score: 0,
+            replyingTo: replyToPerson
         });
-      
-        textarea.value = ''
-      }
+
+        this.isStatic 
+            ? this.formTextarea.value = '' 
+            : this.formElement.remove()
+    }
 
     create() {
-        this.context.append(this.generateForm());
+        this.context.prepend(this.generateForm());
     }
 
     generateForm() {
         const form = document.createElement('form')
-        form.className = "form form--reply"
+        form.className = `form  ${this.isStatic ? '' : 'form--reply form--create'}`
         form.id = this.id
         form.innerHTML = this.generateFormTemplate()
+        setTimeout(() => this.formElement.classList.remove('form--create'), 500)
 
         return form;
     }
@@ -62,7 +77,7 @@ export default class Form {
             </label>
             <textarea class="form__textarea" name="comment-text" id="comment-text" placeholder="Add a comment..."></textarea>
             <button type="button" class="form__submit">send</button>
-            <button type="button" class="form__delete"><b>X</b></button>
+            ${this.isStatic ? '' : '<button type="button" class="form__delete"><b>X</b></button>'}
         `;
     }
 }
