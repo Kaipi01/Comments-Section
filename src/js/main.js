@@ -1,7 +1,7 @@
 import * as utils from './utils.js';
 import * as json from '../data.json' assert { type: 'json' };
 import CommentsList from "./Classes/CommentsList.js";
-import Form from './Classes/Form.js';
+import { Form } from './Classes/Form.js';
 
 const data = utils.getDataJSON(json);
 const USER_NAME = data.currentUser.username;
