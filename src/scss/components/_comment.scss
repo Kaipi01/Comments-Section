@@ -56,6 +56,10 @@
 
   &__info {
     width: 90%;
+
+    @media (max-width: $mobile) {
+      width: 100%;
+    }
   }
 
   &__header {
@@ -127,11 +131,23 @@
     &-form {
       display: none;
       flex-direction: column;
+      width: 100%;
       align-items: flex-end;
       margin-top: 15px;
 
       &--show {
         display: flex;
+      }
+    }
+
+    &-error {
+      top: 80px !important;
+
+      @media (max-width: $mobile) {
+        top: 70px !important;
+      }
+      @media (max-width: 500px) {
+        top: 60px !important;
       }
     }
 
@@ -147,6 +163,10 @@
 
     @media (max-width: $mobile) {
       right: 105px;
+    }
+
+    @media (max-width: 500px) {
+      right: 80px;
     }
   }
 

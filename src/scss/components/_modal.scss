@@ -1,5 +1,6 @@
 @use "../utils/variables" as *;
 @use "../utils/fixed-center" as *;
+@use "../animations/opacityEffect" as *;
 
 .modal {
   @extend %fixed-center;
@@ -7,6 +8,15 @@
   width: 100%;
   min-height: 100vh;
   background-color: #00000091;
+
+  &--open {
+    -webkit-animation: opacityEffect 0.3s 1 ease-in-out;
+    animation: opacityEffect 0.3s 1 ease-in-out;
+  }
+
+  &--close {
+    animation: opacityEffect 0.3s 1 ease-in-out reverse;
+  }
 
   &__content {
     @extend %fixed-center;

@@ -20,7 +20,7 @@
 
   &--create {
     -webkit-animation: bounceEffect 0.5s 1 ease-in-out;
-            animation: bounceEffect 0.5s 1 ease-in-out;
+    animation: bounceEffect 0.5s 1 ease-in-out;
   }
 
   &--reply {
@@ -55,8 +55,8 @@
     border-color: $moderate-blue;
     color: hsl(212, 24%, 26%);
     font-family: "Rubik", sans-serif;
-    line-height: 1.45;
     font-size: 16px;
+    line-height: 1.45;
     resize: vertical;
   }
 
@@ -81,5 +81,23 @@
     position: absolute;
     top: 3px;
     left: 3px;
+  }
+
+  &__error {
+    display: none;
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    min-width: 200px;
+    padding: 3px 10px;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    background-color: rgb(167, 0, 0);
+    color: $white;
+    font-size: 0.85em;
+
+    @media (max-width: 500px) {
+      top: 15px;
+    }
   }
 }
