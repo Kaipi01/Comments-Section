@@ -1,4 +1,4 @@
-import { UserComment, Comment } from "./Comment.js";
+import * as comment from "./Comment.js";
 
 export default class CommentsList {
     constructor(userName, userAvatar) {
@@ -7,8 +7,8 @@ export default class CommentsList {
     }
 
     generateComments(data, context) {
-        data.forEach(comment => {
-            const { id, content, createdAt, score, replies, replyingTo, user } = comment;
+        data.forEach(commentData => {
+            const { id, content, createdAt, score, replies, replyingTo, user } = commentData;
             const author = user.username;
             const avatar = user.image.png;
             const properties = {
@@ -23,13 +23,15 @@ export default class CommentsList {
             }
 
             author === this.userName
-                ? new UserComment(properties)
-                : new Comment(properties);
+                ? new comment.UserComment(properties)
+                : new comment.Comment(properties);
 
             if (replies) {
                 this.generateComments(
                     replies,
-                    document.querySelector(`#comment${id} .comment__replies`)
+                    document.querySelector(
+                        `#${comment.ID_PREFIX + id} .${comment.REPLIES_LIST_CLASS}`
+                    )
                 )
             }
         });

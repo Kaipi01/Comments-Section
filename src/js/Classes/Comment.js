@@ -1,43 +1,50 @@
 import * as utils from '../utils.js';
-import Form from './Form.js';
+import * as form from './Form.js';
 import Modal from './Modal.js';
 
-const COMMENT_ID = 'comment',
-    COMMENT_CLASS = 'comment',
-    COMMENT_CONTAINER_CLASS = 'comment__container',
-    COMMENT_INFO_CLASS = 'comment__info',
-    COMMENT_CONTENT_CLASS = 'comment__content',
-    COMMENT_AVATAR_CLASS = 'comment__avatar',
-    COMMENT_AUTHOR_CLASS = 'comment__author',
-    COMMENT_AUTHOR_INFO_CLASS = 'comment__author-badge',
-    COMMENT_HEADER_CLASS = 'comment__header',
-    COMMENT_DATE_CLASS = 'comment__created-at',
-    COMMENT_LINK_CLASS = 'comment__link',
-    COMMENT_SCORE_CLASS = 'comment__score',    
-    COMMENT_REPLIES_LIST_CLASS = 'comment__replies',
-    COMMENT_TOOL_BTN_CLASS = 'comment__tool-btn',
-    COMMENT_REPLY_BTN_CLASS = 'comment__reply-btn',
-    COMMENT_REPLY_ICON = './images/icon-reply.svg',
-    COMMENT_REPLY_ICON_CLASS = 'comment__reply-btn-icon',
-    COMMENT_EDIT_BTN_CLASS = 'comment__edit-btn',
-    COMMENT_EDIT_ICON = './images/icon-edit.svg',
-    COMMENT_EDIT_ICON_CLASS = 'comment__edit-btn-icon',
-    COMMENT_DELETE_BTN_CLASS = 'comment__delete-btn',
-    COMMENT_DELETE_ICON = './images/icon-delete.svg',
-    COMMENT_DELETE_ICON_CLASS = 'comment__delete-btn-icon',
-    COMMENT_VOTES_CLASS = 'comment__votes',
-    COMMENT_VOTE_BTN_CLASS = 'comment__btn-vote',
-    COMMENT_VOTE_ICON_CLASS = 'comment__btn-vote-icon',
-    COMMENT_UP_VOTE_BTN_CLASS = 'comment__btn-vote-up',
-    COMMENT_DOWN_VOTE_BTN_CLASS = 'comment__btn-vote-down',
-    COMMENT_VOTE_BTN_ANIMATION_CLASS = 'comment__btn-vote--animate',
-    COMMENT_UP_VOTE_ICON = `
-        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="${COMMENT_VOTE_ICON_CLASS}">
+export const ID_PREFIX = 'comment',
+    CLASS = 'comment',
+    CONTAINER_CLASS = 'comment__container',
+    INFO_CLASS = 'comment__info',
+    CONTENT_CLASS = 'comment__content',
+    AVATAR_CLASS = 'comment__avatar',
+    AUTHOR_CLASS = 'comment__author',
+    AUTHOR_INFO_CLASS = 'comment__author-badge',
+    HEADER_CLASS = 'comment__header',
+    DATE_CLASS = 'comment__created-at',
+    LINK_CLASS = 'comment__link',
+    SCORE_CLASS = 'comment__score',    
+    REPLIES_LIST_CLASS = 'comment__replies',
+    UPDATE_FORM_CLASS = 'comment__update-form',
+    UPDATE_TEXTAREA_CLASS = 'comment__update-textarea',
+    UPDATE_TEXTAREA_ID = 'update-text',
+    UPDATE_SUBMIT_CLASS = 'comment__update-btn',
+    TOOL_BTN_CLASS = 'comment__tool-btn',
+    REPLY_BTN_CLASS = 'comment__reply-btn',
+    REPLY_ICON = './images/icon-reply.svg',
+    REPLY_ICON_CLASS = 'comment__reply-btn-icon',
+    REPLY_MODIFIER_CLASS = 'comment--reply',
+    DELETE_MODIFIER_CLASS = 'comment--delete',
+    EDIT_BTN_CLASS = 'comment__edit-btn',
+    EDIT_ICON = './images/icon-edit.svg',
+    EDIT_ICON_CLASS = 'comment__edit-btn-icon',
+    DELETE_BTN_CLASS = 'comment__delete-btn',
+    DELETE_ICON = './images/icon-delete.svg',
+    DELETE_ICON_CLASS = 'comment__delete-btn-icon',
+    VOTES_CLASS = 'comment__votes',
+    VOTE_BTN_INFO_CLASS = 'comment__btn-vote-info',
+    VOTE_BTN_CLASS = 'comment__btn-vote',
+    VOTE_ICON_CLASS = 'comment__btn-vote-icon',
+    UP_VOTE_BTN_CLASS = 'comment__btn-vote-up',
+    DOWN_VOTE_BTN_CLASS = 'comment__btn-vote-down',
+    VOTE_BTN_ANIMATION_CLASS = 'comment__btn-vote--animate',
+    UP_VOTE_ICON = `
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="${VOTE_ICON_CLASS}">
             <path d="M6.33 10.896c.137 0 .255-.05.354-.149.1-.1.149-.217.149-.354V7.004h3.315c.136 0 .254-.05.354-.149.099-.1.148-.217.148-.354V5.272a.483.483 0 0 0-.148-.354.483.483 0 0 0-.354-.149H6.833V1.4a.483.483 0 0 0-.149-.354.483.483 0 0 0-.354-.149H4.915a.483.483 0 0 0-.354.149c-.1.1-.149.217-.149.354v3.37H1.08a.483.483 0 0 0-.354.15c-.1.099-.149.217-.149.353v1.23c0 .136.05.254.149.353.1.1.217.149.354.149h3.333v3.39c0 .136.05.254.15.353.098.1.216.149.353.149H6.33Z"></path>
         </svg>
     `,
-    COMMENT_DOWN_VOTE_ICON = `
-        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="${COMMENT_VOTE_ICON_CLASS}">
+    DOWN_VOTE_ICON = `
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="${VOTE_ICON_CLASS}">
             <path d="M9.256 2.66c.204 0 .38-.056.53-.167.148-.11.222-.243.222-.396V.722c0-.152-.074-.284-.223-.395a.859.859 0 0 0-.53-.167H.76a.859.859 0 0 0-.53.167C.083.437.009.57.009.722v1.375c0 .153.074.285.223.396a.859.859 0 0 0 .53.167h8.495Z"></path>
         </svg>
     `
@@ -63,12 +70,12 @@ export class Comment {
         this.context.append(this.generateComment());
     }
 
-    replayTo(person) {
-        const formsReplay = document.querySelectorAll('.form--reply');
-        formsReplay.forEach(form => form.remove())
+    replayTo() {
+        const formsReplay = document.querySelectorAll(`.${form.REPLY_MODIFIER_CLASS}`);
+        formsReplay.forEach(formReplay => formReplay.remove())
 
-        new Form(document.querySelector(
-            `#${COMMENT_ID + this.id} .${COMMENT_REPLIES_LIST_CLASS}`
+        new form.Form(document.querySelector(
+            `#${ID_PREFIX + this.id} .${REPLIES_LIST_CLASS}`
         ))
     }
 
@@ -79,7 +86,7 @@ export class Comment {
         this.isVoted = true;
         utils.animate(
             this.upVoteBtn,
-            COMMENT_VOTE_BTN_ANIMATION_CLASS
+            VOTE_BTN_ANIMATION_CLASS
         )
         utils.disableBtn(this.upVoteBtn)
         utils.enableBtn(this.downVoteBtn)
@@ -92,18 +99,18 @@ export class Comment {
         this.isVoted = true;
         utils.animate(
             this.downVoteBtn,
-            COMMENT_VOTE_BTN_ANIMATION_CLASS
+            VOTE_BTN_ANIMATION_CLASS
         )
         utils.disableBtn(this.downVoteBtn)
         utils.enableBtn(this.upVoteBtn)
     }
 
     attachElements() {
-        this.commentElement = document.querySelector(`#${COMMENT_ID + this.id}`)
-        this.voteNumberElement = this.commentElement.querySelector(`.${COMMENT_SCORE_CLASS}`)
-        this.upVoteBtn = this.commentElement.querySelector(`.${COMMENT_UP_VOTE_BTN_CLASS}`)
-        this.downVoteBtn = this.commentElement.querySelector(`.${COMMENT_DOWN_VOTE_BTN_CLASS}`)
-        this.replayBtn = this.commentElement.querySelector(`.${COMMENT_REPLY_BTN_CLASS}`)
+        this.commentElement = document.querySelector(`#${ID_PREFIX + this.id}`)
+        this.voteNumberElement = this.commentElement.querySelector(`.${SCORE_CLASS}`)
+        this.upVoteBtn = this.commentElement.querySelector(`.${UP_VOTE_BTN_CLASS}`)
+        this.downVoteBtn = this.commentElement.querySelector(`.${DOWN_VOTE_BTN_CLASS}`)
+        this.replayBtn = this.commentElement.querySelector(`.${REPLY_BTN_CLASS}`)
     }
 
     setEventListeners() {
@@ -114,8 +121,8 @@ export class Comment {
 
     generateComment() {
         const comment = document.createElement('article')
-        comment.className = `${COMMENT_CLASS} ${this.replyingTo ? 'comment--reply' : ''}`
-        comment.id = COMMENT_ID + this.id
+        comment.className = `${CLASS} ${this.replyingTo ? REPLY_MODIFIER_CLASS : ''}`
+        comment.id = ID_PREFIX + this.id
         comment.innerHTML = this.generateCommentTemplate();
 
         return comment;
@@ -123,39 +130,39 @@ export class Comment {
 
     generateCommentTemplate() {
         return `
-            <div class="${COMMENT_CONTAINER_CLASS}">
-                <div class="${COMMENT_INFO_CLASS}">
-                    <header class="${COMMENT_HEADER_CLASS}">
+            <div class="${CONTAINER_CLASS}">
+                <div class="${INFO_CLASS}">
+                    <header class="${HEADER_CLASS}">
                         ${this.generateAvatar()}
                         ${this.generateTitleWidthBadge(false)}
                         ${this.generateDateCreated()}
                         ${this.generateReplayButton()}
                     </header>
-                    <p class="${COMMENT_CONTENT_CLASS}">
+                    <p class="${CONTENT_CLASS}">
                         ${this.generateContent(this.content)}
                     </p>
                 </div>
                 ${this.generateCommentVotes()}
             </div>
-            <ul class="${COMMENT_REPLIES_LIST_CLASS}"></ul>
+            <ul class="${REPLIES_LIST_CLASS}"></ul>
         `;
     }
 
     generateAvatar() {
-        return `<img class="${COMMENT_AVATAR_CLASS}" src="${this.avatar}" alt="${this.author} avatar">`
+        return `<img class="${AVATAR_CLASS}" src="${this.avatar}" alt="${this.author} avatar">`
     }
 
     generateTitleWidthBadge(isUser) {
-        const badge = `<span class="${COMMENT_AUTHOR_INFO_CLASS}">you</span>`
+        const badge = `<span class="${AUTHOR_INFO_CLASS}">you</span>`
 
         return `
-            <h3 class="${COMMENT_AUTHOR_CLASS}">${this.author}${isUser ? badge : ''}</h3>
+            <h3 class="${AUTHOR_CLASS}">${this.author}${isUser ? badge : ''}</h3>
         `
     }
 
     generateDateCreated() {
         return `
-            <time class="${COMMENT_DATE_CLASS}" datetime="2022-10-13">
+            <time class="${DATE_CLASS}" datetime="2022-10-13">
                 ${this.createdAt}
             </time>
         `
@@ -166,7 +173,7 @@ export class Comment {
 
         return `
             ${this.replyingTo
-                ? `<a class="${COMMENT_LINK_CLASS}" href="#${addresseeID}">@${this.replyingTo}</a>`
+                ? `<a class="${LINK_CLASS}" href="#${addresseeID}">@${this.replyingTo}</a>`
                 : ''}
             <span>${content}</span>
         `
@@ -174,8 +181,8 @@ export class Comment {
 
     generateReplayButton() {
         return `
-            <button class="comment__tool-btn comment__reply-btn">
-                <img class="comment__reply-btn-icon" src="./images/icon-reply.svg" aria-hidden="true" alt="">
+            <button class="${TOOL_BTN_CLASS} ${REPLY_BTN_CLASS}">
+                <img class="${REPLY_ICON_CLASS}" src="${REPLY_ICON}" aria-hidden="true" alt="">
                 Reply
             </button>
         `
@@ -183,18 +190,17 @@ export class Comment {
 
     generateCommentVotes() {
         return `
-            <div class="comment__votes">
-                <p class="comment__score">${this.score}</p>
-                <button class="comment__btn-vote comment__btn-vote-up">
-                    ${COMMENT_UP_VOTE_ICON}
-                    <span class="comment__btn-vote-info">
+            <div class="${VOTES_CLASS}">
+                <p class="${SCORE_CLASS}">${this.score}</p>
+                <button class="${VOTE_BTN_CLASS} ${UP_VOTE_BTN_CLASS}">
+                    ${UP_VOTE_ICON}
+                    <span class="${VOTE_BTN_INFO_CLASS}">
                         Mark this comment as helpful
                     </span>
                 </button>
-                <button class="comment__btn-vote comment__btn-vote-down">
-                    
-                    ${COMMENT_DOWN_VOTE_ICON}
-                    <span class="comment__btn-vote-info">
+                <button class="${VOTE_BTN_CLASS} ${DOWN_VOTE_BTN_CLASS}">
+                    ${DOWN_VOTE_ICON}
+                    <span class="${VOTE_BTN_INFO_CLASS}">
                         Mark this comment as unhelpful
                     </span>
                 </button>
@@ -208,13 +214,6 @@ export class UserComment extends Comment {
         super(properties)
     }
 
-    // hideElement(element, isHidden) {
-    //     isHidden 
-    //     ? element.classList.toggle('comment__content--hide')
-    //     : element.classList.toggle('comment__content--hide')
-
-    // }
-
     edit() {
         const currentContent = this.commentContent.querySelector('span').textContent
 
@@ -224,7 +223,7 @@ export class UserComment extends Comment {
         this.commentUpdateForm.classList.add('comment__update-form--show')
         this.commentUpdateTextarea.value = currentContent
 
-        this.commentUpdateBtn.addEventListener('click', () => {
+        this.commentUpdateSubmit.addEventListener('click', () => {
             const updateText = this.commentUpdateTextarea.value
 
             if (updateText !== '') {
@@ -244,40 +243,6 @@ export class UserComment extends Comment {
                 // this.commentContent.style.display = "block"
             }
         })
-
-        // const contentSpan = this.commentContent.querySelector('span')
-        // const currentContent = contentSpan.textContent
-
-        // this.commentContent.innerHTML = `
-
-        // `
-        // const updateBtn = this.commentContent.querySelector('button')
-        // const textarea = this.commentContent.querySelector('textarea')
-
-        // textarea.value = currentContent
-
-        // updateBtn.addEventListener('click', () => {
-        //     if (textarea.value !== '') {
-        //         this.commentContent.innerHTML = this.generateContent(textarea.value)
-        //     }
-        // })
-
-        // this.editBtn.addEventListener('click', () => {
-        //     if (!currentContent)
-        //         this.commentContent.innerHTML = this.generateContent(currentContent)
-        // })
-
-        // window.addEventListener('click', (e) =>{ 
-        //     // if (
-        //     //     e.target.className !== 'comment__edit-btn-icon' &&
-        //     //     e.target.className !== 'comment__edit-btn'
-        //     //     ) {
-        //     //     this.commentContent.innerHTML = this.generateContent(currentContent)
-        //     // }
-        //    console.log(e.target.className)
-        //     //this.commentContent.innerHTML = this.generateContent(currentContent)
-        // })
-
     }
 
     delete() {
@@ -285,22 +250,21 @@ export class UserComment extends Comment {
         modal.open()
 
         document.addEventListener('custom:delete', () => {
-            this.commentElement.classList.add('comment--delete')
+            this.commentElement.classList.add(DELETE_MODIFIER_CLASS)
             setTimeout(() => this.commentElement.remove(), 500)
         })
     }
 
     attachElements() {
-        this.commentElement = document.querySelector(`#comment${this.id}`)
-        this.commentContent = this.commentElement.querySelector('.comment__content')
-        this.editBtn = this.commentElement.querySelector('.comment__edit-btn')
-        this.deleteBtn = this.commentElement.querySelector('.comment__delete-btn')
-        this.voteBtns = this.commentElement.querySelectorAll('.comment__btn-vote')
-        this.commentUpdateForm = this.commentElement.querySelector('.comment__update-form')
-        this.commentUpdateBtn = this.commentElement.querySelector('.comment__update-btn')
-        this.commentUpdateTextarea = this.commentElement.querySelector('.comment__update-textarea')
+        this.commentElement = document.querySelector(`#${ID_PREFIX + this.id}`)
+        this.commentContent = this.commentElement.querySelector(`.${CONTENT_CLASS}`)
+        this.editBtn = this.commentElement.querySelector(`.${EDIT_BTN_CLASS}`)
+        this.deleteBtn = this.commentElement.querySelector(`.${DELETE_BTN_CLASS}`)
+        this.voteBtns = this.commentElement.querySelectorAll(`.${VOTE_BTN_CLASS}`)
+        this.commentUpdateForm = this.commentElement.querySelector(`.${UPDATE_FORM_CLASS}`)
+        this.commentUpdateSubmit = this.commentElement.querySelector(`.${UPDATE_SUBMIT_CLASS}`)
+        this.commentUpdateTextarea = this.commentElement.querySelector(`.${UPDATE_TEXTAREA_CLASS}`)
         this.voteBtns.forEach(btn => btn.setAttribute('disabled', true))
-        //this.commentUpdateForm.style.display = "none"
     }
 
     setEventListeners() {
@@ -310,42 +274,42 @@ export class UserComment extends Comment {
 
     generateCommentTemplate() {
         return `
-            <div class="${COMMENT_CONTAINER_CLASS}">
-                <div class="${COMMENT_INFO_CLASS}">
-                        <header class="${COMMENT_HEADER_CLASS}">
+            <div class="${CONTAINER_CLASS}">
+                <div class="${INFO_CLASS}">
+                        <header class="${HEADER_CLASS}">
                             ${this.generateAvatar()}
                             ${this.generateTitleWidthBadge(true)}
                             ${this.generateDateCreated()}
                             ${this.generateDeleteButton()}
                             ${this.generateEditButton()}
                         </header>
-                        <p class="${COMMENT_CONTENT_CLASS}">
+                        <p class="${CONTENT_CLASS}">
                             ${this.generateContent(this.content)} 
                         </p>
                         ${this.generateUpdateForm()}
                     </div>
                     ${this.generateCommentVotes()}
                 </div>
-            <ul class="${COMMENT_REPLIES_LIST_CLASS}"></ul>
+            <ul class="${REPLIES_LIST_CLASS}"></ul>
         `;
     }
 
     generateUpdateForm() {
         return `
-            <form class="comment__update-form">
-                <label class="form__label" for="update-text">
+            <form class="${UPDATE_FORM_CLASS}">
+                <label class="${form.LABEL_CLASS}" for="${UPDATE_TEXTAREA_ID}">
                     Update comment
                 </label>
-                <textarea class="form__textarea comment__update-textarea" name="update-text" id="update-text"></textarea>
-                <button type="button" class="form__submit comment__update-btn">update</button>
+                <textarea class="${form.TEXTAREA_CLASS} ${UPDATE_TEXTAREA_CLASS}" name="${UPDATE_TEXTAREA_ID}" id="${UPDATE_TEXTAREA_ID}"></textarea>
+                <button type="button" class="${form.SUBMIT_CLASS} ${UPDATE_SUBMIT_CLASS}">update</button>
             </form>
         `
     }
 
     generateDeleteButton() {
         return `
-            <button class="${COMMENT_TOOL_BTN_CLASS} ${COMMENT_DELETE_BTN_CLASS}">
-                <img class="${COMMENT_DELETE_ICON_CLASS}" src="${COMMENT_DELETE_ICON}" aria-hidden="true" alt="">
+            <button class="${TOOL_BTN_CLASS} ${DELETE_BTN_CLASS}">
+                <img class="${DELETE_ICON_CLASS}" src="${DELETE_ICON}" aria-hidden="true" alt="">
                 Delete
             </button>
         `
@@ -353,8 +317,8 @@ export class UserComment extends Comment {
 
     generateEditButton() {
         return `
-            <button class="${COMMENT_TOOL_BTN_CLASS} ${COMMENT_EDIT_BTN_CLASS}">
-                <img class="${COMMENT_EDIT_ICON_CLASS}" src="${COMMENT_EDIT_ICON}" aria-hidden="true" alt="">
+            <button class="${TOOL_BTN_CLASS} ${EDIT_BTN_CLASS}">
+                <img class="${EDIT_ICON_CLASS}" src="${EDIT_ICON}" aria-hidden="true" alt="">
                 Edit
             </button>
         `
