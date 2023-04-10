@@ -4,6 +4,8 @@ const CLASS = 'modal',
     ARTICLE_CLASS = 'modal__content',
     TITLE_CLASS = 'modal__title',
     BUTTON_CLASS = 'modal__btn',
+    CLOSE_MODIFIER_CLASS = 'modal--close',
+    OPEN_MODIFIER_CLASS = 'modal--open',
     CANCEL_BUTTON_CLASS = 'modal__btn-no',
     DELETE_BUTTON_CLASS = 'modal__btn-yes',
     PARAGRAPH_CLASS = 'modal__text'
@@ -15,23 +17,26 @@ export default class Modal {
         this.init();
     }
 
-    delete() {
-        this.modalElement.remove();
+    close() {
+        utils.animate(this.modalElement, CLOSE_MODIFIER_CLASS, 300)
+        setTimeout(() => this.modalElement.style.display = 'none', 300)
     }
 
     open() {
-        this.modalElement.style.display = 'block';
+        this.modalElement.style.display = 'block'
+        utils.animate(this.modalElement, OPEN_MODIFIER_CLASS, 300)
     }
 
     init() {
         this.modalElement = document.querySelector(`.${CLASS}`);
         this.modalBtnNo = this.modalElement.querySelector(`.${CANCEL_BUTTON_CLASS}`)
         this.modalBtnYes = this.modalElement.querySelector(`.${DELETE_BUTTON_CLASS}`)
-        this.modalBtnNo.addEventListener('click', () => this.delete())
+        this.modalBtnNo.addEventListener('click', () => this.close())
         this.modalBtnYes.addEventListener('click', e => {
             e.target.dispatchEvent(utils.deleteEvent)
-            this.delete()
+            this.close()
         })
+        document.addEventListener('custom:open-modal', () => this.open())
     }
 
     create() {

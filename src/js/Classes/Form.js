@@ -13,6 +13,7 @@ export const ID = 'form',
     TEXTAREA_PLACEHOLDER = 'Add a comment...',
     DELETE_BUTTON_CLASS = 'form__delete',
     SUBMIT_CLASS = 'form__submit',
+    ERROR_CLASS = 'form__error',
     IMG_CLASS = 'form__avatar',
     LABEL_CLASS = 'form__label'
 
@@ -26,29 +27,40 @@ export class Form {
     }
 
     delete() {
-        this.formElement.classList.add(DELETE_MODIFIER_CLASS)
-        setTimeout(() => this.formElement.remove(), 500)
+        window.addEventListener('click', e => {
+            if (e.target.className.slice(0, 4) !== CLASS) {
+                utils.animate(this.formElement, DELETE_MODIFIER_CLASS)
+                setTimeout(() => this.formElement.remove(), 500)
+            }
+        })
     }
 
     init() {
         this.formElement = document.querySelector(`#${this.id}`);
         this.formTextarea = this.formElement.querySelector(`.${TEXTAREA_CLASS}`)
         this.formSubmitBtn = this.formElement.querySelector(`.${SUBMIT_CLASS}`)
+        this.formError = this.formElement.querySelector(`.${ERROR_CLASS}`)
         this.formDeleteBtn = this.formElement.querySelector(`.${DELETE_BUTTON_CLASS}`)
         this.formSubmitBtn.addEventListener('click', e => {
             this.addUserComment()
             e.preventDefault()
         })
         if (!this.isStatic)
-            this.formDeleteBtn.addEventListener('click', () => this.delete())
+            window.addEventListener('click', () => this.delete())
     }
 
     addUserComment() {
-        if (this.formTextarea.value === '') return
+        this.formTextarea.addEventListener('input', () => this.formError.style.display = 'none')
+
+        if (this.formTextarea.value === '') {
+            this.formError.style.display = 'block'
+            return
+        }
 
         let replyToPerson
         const contextParent = this.context.parentNode
         const commentsSection = document.querySelector('#comments');
+        this.formError.style.display = 'none'
 
         if (contextParent.classList.contains(comment.CLASS))
             replyToPerson = contextParent.querySelector(`.${comment.AUTHOR_CLASS}`).textContent
@@ -90,8 +102,8 @@ export class Form {
                 Create a new comment
             </label>
             <textarea class="${TEXTAREA_CLASS}" name="${TEXTAREA_ID}" id="${TEXTAREA_ID}" placeholder="${TEXTAREA_PLACEHOLDER}"></textarea>
+            <p class="${ERROR_CLASS}">Comment cannot be empty!</p>
             <button type="button" class="${SUBMIT_CLASS}">send</button>
-            ${this.isStatic ? '' : `<button type="button" class="${DELETE_BUTTON_CLASS}"><b>X</b></button>`}
         `;
     }
 }
