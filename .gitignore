@@ -20,5 +20,6 @@ node_modules/
 dist/
 
 old.css
+old.js
 
 notes.txt
