@@ -1,9 +1,12 @@
+let unusedNumberID = 5;
 const deleteEvent = new CustomEvent('custom:delete', {
     bubbles: true,
 })
-let unusedNumberID = 5;
+const openModalEvent = new CustomEvent('custom:open-modal', {
+    bubbles: true,
+})
 
-export {deleteEvent}
+export { deleteEvent, openModalEvent }
 
 export function generateID() {
     return unusedNumberID++;
@@ -25,7 +28,15 @@ export function disableBtn(btn) {
     btn.classList.add('comment__btn-vote--clicked')
 }
 
-export function animate(element, animation) {
-    element.classList.add(animation)
-    setTimeout(() => element.classList.remove(animation), 500)
+export function animate(element, animationClass, animationTime = 500) {
+    element.classList.add(animationClass)
+    setTimeout(() => element.classList.remove(animationClass), animationTime)
+}
+
+export function getFormatDate() {
+    const date = new Date();
+    const dateISOFormat = date.toISOString().slice(0,10)
+    const dateMnemonicFormat = 'Today'
+    
+    return {dateISOFormat, dateMnemonicFormat}
 }
