@@ -19,6 +19,7 @@ export const ID_PREFIX = 'comment',
     UPDATE_TEXTAREA_CLASS = 'comment__update-textarea',
     UPDATE_TEXTAREA_ID = 'update-text',
     UPDATE_SUBMIT_CLASS = 'comment__update-btn',
+    UPDATE_ERROR_CLASS = 'comment__update-error',
     TOOL_BTN_CLASS = 'comment__tool-btn',
     REPLY_BTN_CLASS = 'comment__reply-btn',
     REPLY_ICON = './images/icon-reply.svg',
@@ -216,41 +217,50 @@ export class UserComment extends Comment {
 
     edit() {
         const currentContent = this.commentContent.querySelector('span').textContent
+        const openEdit = () => {
+            this.commentUpdateError.style.display = 'none'
+            this.commentContent.style.display = "none"
+            this.commentUpdateForm.style.display = "flex" 
+        }
+        const closeEdit = () => {
+            this.commentUpdateForm.style.display = "none"
+            this.commentContent.style.display = "block"
+        }
 
-        // this.commentContent.style.display = "none"
-        // this.commentUpdateForm.style.display = "flex"   
-        this.commentContent.classList.add('comment__content--hide')
-        this.commentUpdateForm.classList.add('comment__update-form--show')
+        openEdit()
         this.commentUpdateTextarea.value = currentContent
-
+        this.commentUpdateTextarea.addEventListener('input', () => this.commentUpdateError.style.display = 'none')
         this.commentUpdateSubmit.addEventListener('click', () => {
             const updateText = this.commentUpdateTextarea.value
 
             if (updateText !== '') {
                 this.commentContent.innerHTML = this.generateContent(updateText)
-                // this.commentUpdateForm.style.display = "none"
-                // this.commentContent.style.display = "block"
-                this.commentContent.classList.remove('comment__content--hide')
-                this.commentUpdateForm.classList.remove('comment__update-form--show')
+                closeEdit() 
+            } else {
+                this.commentUpdateError.style.display = 'block'
             }
         })
-        this.editBtn.addEventListener('click', () => {
-            if (this.commentUpdateForm.classList.contains('comment__update-form--show')) {
-                this.commentContent.innerHTML = this.generateContent(currentContent)
-                this.commentContent.classList.remove('comment__content--hide')
-                this.commentUpdateForm.classList.remove('comment__update-form--show')
-                // this.commentUpdateForm.style.display = "none"
-                // this.commentContent.style.display = "block"
-            }
+
+        window.addEventListener('click', e => {
+            console.log(e.target.id)
+            if (
+                e.target.id !== UPDATE_TEXTAREA_ID && 
+                e.target !== this.editBtn &&
+                e.target !== this.commentUpdateSubmit
+            ) 
+                closeEdit() 
         })
+        
+        
+         this.editBtn.addEventListener('click', () => {
+         })
+        
     }
 
     delete() {
-        const modal = new Modal(this.context)
-        modal.open()
-
+        document.dispatchEvent(utils.openModalEvent)
         document.addEventListener('custom:delete', () => {
-            this.commentElement.classList.add(DELETE_MODIFIER_CLASS)
+            utils.animate(this.commentElement, DELETE_MODIFIER_CLASS)
             setTimeout(() => this.commentElement.remove(), 500)
         })
     }
@@ -263,6 +273,7 @@ export class UserComment extends Comment {
         this.voteBtns = this.commentElement.querySelectorAll(`.${VOTE_BTN_CLASS}`)
         this.commentUpdateForm = this.commentElement.querySelector(`.${UPDATE_FORM_CLASS}`)
         this.commentUpdateSubmit = this.commentElement.querySelector(`.${UPDATE_SUBMIT_CLASS}`)
+        this.commentUpdateError =  this.commentElement.querySelector(`.${UPDATE_ERROR_CLASS}`)
         this.commentUpdateTextarea = this.commentElement.querySelector(`.${UPDATE_TEXTAREA_CLASS}`)
         this.voteBtns.forEach(btn => btn.setAttribute('disabled', true))
     }
@@ -301,6 +312,7 @@ export class UserComment extends Comment {
                     Update comment
                 </label>
                 <textarea class="${form.TEXTAREA_CLASS} ${UPDATE_TEXTAREA_CLASS}" name="${UPDATE_TEXTAREA_ID}" id="${UPDATE_TEXTAREA_ID}"></textarea>
+                <p class="${form.ERROR_CLASS} ${UPDATE_ERROR_CLASS}">Comment cannot be empty!</p>
                 <button type="button" class="${form.SUBMIT_CLASS} ${UPDATE_SUBMIT_CLASS}">update</button>
             </form>
         `
