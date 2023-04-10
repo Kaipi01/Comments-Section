@@ -1,4 +1,9 @@
+const deleteEvent = new CustomEvent('custom:delete', {
+    bubbles: true,
+})
 let unusedNumberID = 5;
+
+export {deleteEvent}
 
 export function generateID() {
     return unusedNumberID++;
