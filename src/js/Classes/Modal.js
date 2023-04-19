@@ -1,4 +1,4 @@
-import * as utils from '../utils.js';
+import * as utils from '../utils.js'
 
 const CLASS = 'modal',
     ARTICLE_CLASS = 'modal__content',
@@ -12,9 +12,9 @@ const CLASS = 'modal',
 
 export default class Modal {
     constructor(context) {
-        this.context = context;
-        this.create();
-        this.init();
+        this.context = context
+        this.create()
+        this.init()
     }
 
     close() {
@@ -40,7 +40,7 @@ export default class Modal {
     }
 
     create() {
-        this.context.append(this.generateModal());
+        this.context.append(this.generateModal())
     }
 
     generateModal() {
@@ -48,7 +48,7 @@ export default class Modal {
         modal.className = CLASS
         modal.innerHTML = this.generateModalTemplate()
 
-        return modal;
+        return modal
     }
 
     generateModalTemplate() {
@@ -63,6 +63,6 @@ export default class Modal {
                 <button class="${BUTTON_CLASS} ${CANCEL_BUTTON_CLASS}">No, cancel</button>
                 <button class="${BUTTON_CLASS} ${DELETE_BUTTON_CLASS}">Yes, delete</button>
             </article>
-        `;
+        `
     }
 }

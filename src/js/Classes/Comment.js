@@ -1,6 +1,5 @@
-import * as utils from '../utils.js';
-import * as form from './Form.js';
-import Modal from './Modal.js';
+import * as utils from '../utils.js'
+import * as form from './Form.js'
 
 export const ID_PREFIX = 'comment',
     CLASS = 'comment',
@@ -13,7 +12,7 @@ export const ID_PREFIX = 'comment',
     HEADER_CLASS = 'comment__header',
     DATE_CLASS = 'comment__created-at',
     LINK_CLASS = 'comment__link',
-    SCORE_CLASS = 'comment__score',    
+    SCORE_CLASS = 'comment__score',
     REPLIES_LIST_CLASS = 'comment__replies',
     UPDATE_FORM_CLASS = 'comment__update-form',
     UPDATE_TEXTAREA_CLASS = 'comment__update-textarea',
@@ -54,25 +53,26 @@ export const ID_PREFIX = 'comment',
 export class Comment {
     constructor({ context, id, author, createdAt, content, avatar = '', score = 0, replyingTo } = properties) {
         this.context = context;
-        this.id = id;
-        this.author = author;
-        this.createdAt = createdAt;
-        this.content = content;
-        this.avatar = avatar;
-        this.score = score;
-        this.replyingTo = replyingTo;
-        this.isVoted = false;
-        this.create();
-        this.attachElements();
-        this.setEventListeners();
+        this.id = id
+        this.author = author
+        this.createdAt = createdAt
+        this.content = content
+        this.avatar = avatar
+        this.score = score
+        this.replyingTo = replyingTo
+        this.isVoted = false
+        this.create()
+        this.attachElements()
+        this.setEventListeners()
+        this.save()
     }
 
     create() {
-        this.context.append(this.generateComment());
+        this.context.append(this.generateComment())
     }
 
     replayTo() {
-        const formsReplay = document.querySelectorAll(`.${form.REPLY_MODIFIER_CLASS}`);
+        const formsReplay = document.querySelectorAll(`.${form.REPLY_MODIFIER_CLASS}`)
         formsReplay.forEach(formReplay => formReplay.remove())
 
         new form.Form(document.querySelector(
@@ -83,8 +83,8 @@ export class Comment {
     upVote() {
         this.voteNumberElement.textContent = this.isVoted
             ? this.score += 2
-            : ++this.score;
-        this.isVoted = true;
+            : ++this.score
+        this.isVoted = true
         utils.animate(
             this.upVoteBtn,
             VOTE_BTN_ANIMATION_CLASS
@@ -96,7 +96,7 @@ export class Comment {
     downVote() {
         this.voteNumberElement.textContent = this.isVoted
             ? this.score -= 2
-            : --this.score;
+            : --this.score
         this.isVoted = true;
         utils.animate(
             this.downVoteBtn,
@@ -106,12 +106,38 @@ export class Comment {
         utils.enableBtn(this.upVoteBtn)
     }
 
+    save() {
+        if (!this.replyingTo) {
+            const repliesComments = [];
+            this.repliesComments.forEach(comment => {
+                console.log(comment)
+            })
+
+            localStorage.setItem(`comment${this.id}`, JSON.stringify(
+                {
+                    id: this.id,
+                    content: this.content,
+                    createdAt: this.createdAt,
+                    score: this.score,
+                    user: {
+                        image: {
+                            png: this.avatar,
+                        },
+                        username: this.author,
+                    },
+                    replies: repliesComments
+                }
+            ));
+        }
+    }
+
     attachElements() {
         this.commentElement = document.querySelector(`#${ID_PREFIX + this.id}`)
         this.voteNumberElement = this.commentElement.querySelector(`.${SCORE_CLASS}`)
         this.upVoteBtn = this.commentElement.querySelector(`.${UP_VOTE_BTN_CLASS}`)
         this.downVoteBtn = this.commentElement.querySelector(`.${DOWN_VOTE_BTN_CLASS}`)
         this.replayBtn = this.commentElement.querySelector(`.${REPLY_BTN_CLASS}`)
+        this.repliesComments = this.commentElement.querySelectorAll(`.comment__replies .comment`)
     }
 
     setEventListeners() {
@@ -124,9 +150,9 @@ export class Comment {
         const comment = document.createElement('article')
         comment.className = `${CLASS} ${this.replyingTo ? REPLY_MODIFIER_CLASS : ''}`
         comment.id = ID_PREFIX + this.id
-        comment.innerHTML = this.generateCommentTemplate();
+        comment.innerHTML = this.generateCommentTemplate()
 
-        return comment;
+        return comment
     }
 
     generateCommentTemplate() {
@@ -145,8 +171,8 @@ export class Comment {
                 </div>
                 ${this.generateCommentVotes()}
             </div>
-            <ul class="${REPLIES_LIST_CLASS}"></ul>
-        `;
+            <div class="${REPLIES_LIST_CLASS}"></div>
+        `
     }
 
     generateAvatar() {
@@ -220,7 +246,7 @@ export class UserComment extends Comment {
         const openEdit = () => {
             this.commentUpdateError.style.display = 'none'
             this.commentContent.style.display = "none"
-            this.commentUpdateForm.style.display = "flex" 
+            this.commentUpdateForm.style.display = "flex"
         }
         const closeEdit = () => {
             this.commentUpdateForm.style.display = "none"
@@ -235,7 +261,7 @@ export class UserComment extends Comment {
 
             if (updateText !== '') {
                 this.commentContent.innerHTML = this.generateContent(updateText)
-                closeEdit() 
+                closeEdit()
             } else {
                 this.commentUpdateError.style.display = 'block'
             }
@@ -244,17 +270,17 @@ export class UserComment extends Comment {
         window.addEventListener('click', e => {
             console.log(e.target.id)
             if (
-                e.target.id !== UPDATE_TEXTAREA_ID && 
+                e.target.id !== UPDATE_TEXTAREA_ID &&
                 e.target !== this.editBtn &&
                 e.target !== this.commentUpdateSubmit
-            ) 
-                closeEdit() 
+            )
+                closeEdit()
         })
-        
-        
-         this.editBtn.addEventListener('click', () => {
-         })
-        
+
+
+        this.editBtn.addEventListener('click', () => {
+        })
+
     }
 
     delete() {
@@ -273,7 +299,7 @@ export class UserComment extends Comment {
         this.voteBtns = this.commentElement.querySelectorAll(`.${VOTE_BTN_CLASS}`)
         this.commentUpdateForm = this.commentElement.querySelector(`.${UPDATE_FORM_CLASS}`)
         this.commentUpdateSubmit = this.commentElement.querySelector(`.${UPDATE_SUBMIT_CLASS}`)
-        this.commentUpdateError =  this.commentElement.querySelector(`.${UPDATE_ERROR_CLASS}`)
+        this.commentUpdateError = this.commentElement.querySelector(`.${UPDATE_ERROR_CLASS}`)
         this.commentUpdateTextarea = this.commentElement.querySelector(`.${UPDATE_TEXTAREA_CLASS}`)
         this.voteBtns.forEach(btn => btn.setAttribute('disabled', true))
     }
@@ -301,8 +327,8 @@ export class UserComment extends Comment {
                     </div>
                     ${this.generateCommentVotes()}
                 </div>
-            <ul class="${REPLIES_LIST_CLASS}"></ul>
-        `;
+            <div class="${REPLIES_LIST_CLASS}"></div>
+        `
     }
 
     generateUpdateForm() {

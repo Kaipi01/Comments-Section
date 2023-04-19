@@ -1,6 +1,6 @@
-import * as utils from '../utils.js';
-import * as comment from "./Comment.js";
-import { USER_NAME, USER_AVATAR } from '../main.js';
+import * as utils from '../utils.js'
+import * as comment from "./Comment.js"
+import { USER_NAME, USER_AVATAR } from '../main.js'
 
 export const ID = 'form',
     REPLY_ID = 'reply-form',
@@ -19,11 +19,11 @@ export const ID = 'form',
 
 export class Form {
     constructor(context, isStatic = false) {
-        this.context = context;
-        this.isStatic = isStatic;
+        this.context = context
+        this.isStatic = isStatic
         this.id = this.isStatic ? ID : REPLY_ID
-        this.create();
-        this.init();
+        this.create()
+        this.init()
     }
 
     delete() {
@@ -82,7 +82,7 @@ export class Form {
     }
 
     create() {
-        this.context.prepend(this.generateForm());
+        this.context.prepend(this.generateForm())
     }
 
     generateForm() {
@@ -92,7 +92,7 @@ export class Form {
         form.innerHTML = this.generateFormTemplate()
         setTimeout(() => this.formElement.classList.remove(CREATE_MODIFIER_CLASS), 500)
 
-        return form;
+        return form
     }
 
     generateFormTemplate() {
@@ -104,6 +104,6 @@ export class Form {
             <textarea class="${TEXTAREA_CLASS}" name="${TEXTAREA_ID}" id="${TEXTAREA_ID}" placeholder="${TEXTAREA_PLACEHOLDER}"></textarea>
             <p class="${ERROR_CLASS}">Comment cannot be empty!</p>
             <button type="button" class="${SUBMIT_CLASS}">send</button>
-        `;
+        `
     }
 }
