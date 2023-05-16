@@ -43,15 +43,13 @@ export function isUniqueArrayOfObjects(array, key) {
     return flag
 }
 
-export function findNestedObjectByKey(collection, key, value) {
-    for (let object of collection) {
-        for (let [k, v] of Object.entries(object)) {
-            if (k === key && v === value)
-                return object
-            if (Array.isArray(v)) {
-                object =  findNestedObjectByKey(v, key, value)
-                if (object) return object
-            }
+export function findNestedObjectByKey(object, key, value) {
+    let foundObj;
+    JSON.stringify(object, (_, nestedValue) => {
+        if (nestedValue && nestedValue[key] === value) {
+            foundObj = nestedValue;
         }
-    }
-}
+        return nestedValue;
+    });
+    return foundObj;
+};
