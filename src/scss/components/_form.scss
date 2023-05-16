@@ -34,6 +34,7 @@
 
   &__avatar {
     width: 50px;
+    border-radius: 50%;
 
     @media (max-width: $mobile) {
       position: absolute;

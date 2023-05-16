@@ -74,6 +74,7 @@
 
   &__avatar {
     width: 40px;
+    border-radius: 50%;
 
     @media (max-width: $mobile) {
       width: 30px;
@@ -131,8 +132,8 @@
     &-form {
       display: none;
       flex-direction: column;
-      width: 100%;
       align-items: flex-end;
+      width: 100%;
       margin-top: 15px;
 
       &--show {
@@ -253,9 +254,7 @@
       order: -1;
     }
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:hover {
       .comment__btn-vote-icon {
         fill: $moderate-blue;
       }
