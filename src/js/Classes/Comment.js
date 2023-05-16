@@ -64,14 +64,16 @@ export class Comment {
         this.replyingTo = replyingTo
         this.replyingToID = parseInt(this.context.parentNode.id.substring(7)) || null
         this.isVoted = false
+        this.votedTo = null
         this.create()
         this.attachElements()
+        this.loadVotesFromLocalStorage()
         this.setEventListeners()
         this.saveToLocalStorage()
     }
 
     create() {
-        this.context.append(this.generateComment())   
+        this.context.append(this.generateComment())
     }
 
     replayTo() {
@@ -92,16 +94,19 @@ export class Comment {
             : (isUpVoteBtn ? ++this.score : --this.score)
 
         if (this.isVoted) {
+            this.votedTo = null
             this.isVoted = false
             utils.enableBtn(innerVoteBtn)
             btn.classList.remove(VOTE_BTN_CLICKED_CLASS)
         } else {
+            this.votedTo = isUpVoteBtn ? "up" : "down"
             this.isVoted = true
             utils.disableBtn(innerVoteBtn)
             btn.classList.add(VOTE_BTN_CLICKED_CLASS)
         }
         utils.animate(btn, VOTE_BTN_ANIMATION_CLASS)
         this.updateLocalStorage('score', this.score)
+        this.updateLocalStorage('votedTo', this.votedTo)
     }
 
     attachElements() {
@@ -125,6 +130,23 @@ export class Comment {
         comment.innerHTML = this.generateCommentTemplate()
 
         return comment
+    }
+
+    loadVotesFromLocalStorage() {
+        const comments = JSON.parse(localStorage.getItem('comments'))
+        const thisComment = utils.findNestedObjectByKey(comments, "id", this.id)
+
+        if (thisComment?.votedTo) {
+            this.isVoted = true
+
+            if (thisComment.votedTo === "up") {
+                utils.disableBtn(this.downVoteBtn)
+                this.upVoteBtn.classList.add(VOTE_BTN_CLICKED_CLASS)
+            } else {
+                utils.disableBtn(this.upVoteBtn)
+                this.downVoteBtn.classList.add(VOTE_BTN_CLICKED_CLASS)
+            }
+        }
     }
 
     updateLocalStorage(property, value) {
@@ -152,7 +174,8 @@ export class Comment {
                     image: { png: this.avatar },
                     username: this.author,
                 },
-                replies: this.getRepliesComments(this.commentElement)
+                replies: this.getRepliesComments(this.commentElement),
+                votedTo: this.votedTo
             }
 
             if (this.replyingTo) {
@@ -281,6 +304,8 @@ export class UserComment extends Comment {
 
     vote() { return }
 
+    loadVotesFromLocalStorage() { return }
+
     edit() {
         const currentContent = this.commentContent.querySelector('span').textContent
         const openEdit = () => {
@@ -352,10 +377,7 @@ export class UserComment extends Comment {
     }
 
     setEventListeners() {
-        this.editBtn.addEventListener('click', () => {
-            console.log(this.editBtn)
-            this.edit()
-        })
+        this.editBtn.addEventListener('click', () => this.edit())
         this.deleteBtn.addEventListener('click', () => this.delete())
     }
 
