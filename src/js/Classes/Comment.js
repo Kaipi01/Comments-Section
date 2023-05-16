@@ -200,10 +200,8 @@ export class Comment {
                 replyingTo = comment.querySelector(`.${LINK_CLASS}`)?.textContent.substring(1),
                 replies = this.getRepliesComments(comment),
                 username = comment.querySelector(`.${AUTHOR_CLASS}`).childNodes[0].textContent,
-                png = '.' + new URL(
-                    comment.querySelector(`.${AVATAR_CLASS}`).src
-                ).pathname.substring(4)
-
+                png = comment.querySelector(`.${AVATAR_CLASS}`).src
+                
             repliesCommentsArray.push({
                 id,
                 content,
