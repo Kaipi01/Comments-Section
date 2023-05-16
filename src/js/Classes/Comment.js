@@ -3,6 +3,7 @@ import * as form from './Form.js'
 
 export const ID_PREFIX = 'comment',
     CLASS = 'comment',
+    ANIMATION_CLASS = 'comment--animate',
     CONTAINER_CLASS = 'comment__container',
     INFO_CLASS = 'comment__info',
     CONTENT_CLASS = 'comment__content',
@@ -38,6 +39,7 @@ export const ID_PREFIX = 'comment',
     UP_VOTE_BTN_CLASS = 'comment__btn-vote-up',
     DOWN_VOTE_BTN_CLASS = 'comment__btn-vote-down',
     VOTE_BTN_ANIMATION_CLASS = 'comment__btn-vote--animate',
+    VOTE_BTN_CLICKED_CLASS = 'comment__btn-vote--clicked',
     UP_VOTE_ICON = `
         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="${VOTE_ICON_CLASS}">
             <path d="M6.33 10.896c.137 0 .255-.05.354-.149.1-.1.149-.217.149-.354V7.004h3.315c.136 0 .254-.05.354-.149.099-.1.148-.217.148-.354V5.272a.483.483 0 0 0-.148-.354.483.483 0 0 0-.354-.149H6.833V1.4a.483.483 0 0 0-.149-.354.483.483 0 0 0-.354-.149H4.915a.483.483 0 0 0-.354.149c-.1.1-.149.217-.149.354v3.37H1.08a.483.483 0 0 0-.354.15c-.1.099-.149.217-.149.353v1.23c0 .136.05.254.149.353.1.1.217.149.354.149h3.333v3.39c0 .136.05.254.15.353.098.1.216.149.353.149H6.33Z"></path>
@@ -60,15 +62,16 @@ export class Comment {
         this.avatar = avatar
         this.score = score
         this.replyingTo = replyingTo
+        this.replyingToID = parseInt(this.context.parentNode.id.substring(7)) || null
         this.isVoted = false
         this.create()
         this.attachElements()
         this.setEventListeners()
-        this.save()
+        this.saveToLocalStorage()
     }
 
     create() {
-        this.context.append(this.generateComment())
+        this.context.append(this.generateComment())   
     }
 
     replayTo() {
@@ -80,55 +83,25 @@ export class Comment {
         ))
     }
 
-    upVote() {
+    vote(btn) {
+        const isUpVoteBtn = btn === this.upVoteBtn
+        const innerVoteBtn = isUpVoteBtn ? this.downVoteBtn : this.upVoteBtn
+
         this.voteNumberElement.textContent = this.isVoted
-            ? this.score += 2
-            : ++this.score
-        this.isVoted = true
-        utils.animate(
-            this.upVoteBtn,
-            VOTE_BTN_ANIMATION_CLASS
-        )
-        utils.disableBtn(this.upVoteBtn)
-        utils.enableBtn(this.downVoteBtn)
-    }
+            ? (isUpVoteBtn ? --this.score : ++this.score)
+            : (isUpVoteBtn ? ++this.score : --this.score)
 
-    downVote() {
-        this.voteNumberElement.textContent = this.isVoted
-            ? this.score -= 2
-            : --this.score
-        this.isVoted = true;
-        utils.animate(
-            this.downVoteBtn,
-            VOTE_BTN_ANIMATION_CLASS
-        )
-        utils.disableBtn(this.downVoteBtn)
-        utils.enableBtn(this.upVoteBtn)
-    }
-
-    save() {
-        if (!this.replyingTo) {
-            const repliesComments = [];
-            this.repliesComments.forEach(comment => {
-                console.log(comment)
-            })
-
-            localStorage.setItem(`comment${this.id}`, JSON.stringify(
-                {
-                    id: this.id,
-                    content: this.content,
-                    createdAt: this.createdAt,
-                    score: this.score,
-                    user: {
-                        image: {
-                            png: this.avatar,
-                        },
-                        username: this.author,
-                    },
-                    replies: repliesComments
-                }
-            ));
+        if (this.isVoted) {
+            this.isVoted = false
+            utils.enableBtn(innerVoteBtn)
+            btn.classList.remove(VOTE_BTN_CLICKED_CLASS)
+        } else {
+            this.isVoted = true
+            utils.disableBtn(innerVoteBtn)
+            btn.classList.add(VOTE_BTN_CLICKED_CLASS)
         }
+        utils.animate(btn, VOTE_BTN_ANIMATION_CLASS)
+        this.updateLocalStorage('score', this.score)
     }
 
     attachElements() {
@@ -137,12 +110,11 @@ export class Comment {
         this.upVoteBtn = this.commentElement.querySelector(`.${UP_VOTE_BTN_CLASS}`)
         this.downVoteBtn = this.commentElement.querySelector(`.${DOWN_VOTE_BTN_CLASS}`)
         this.replayBtn = this.commentElement.querySelector(`.${REPLY_BTN_CLASS}`)
-        this.repliesComments = this.commentElement.querySelectorAll(`.comment__replies .comment`)
     }
 
     setEventListeners() {
-        this.upVoteBtn.addEventListener('click', () => this.upVote())
-        this.downVoteBtn.addEventListener('click', () => this.downVote())
+        this.upVoteBtn.addEventListener('click', () => this.vote(this.upVoteBtn))
+        this.downVoteBtn.addEventListener('click', () => this.vote(this.downVoteBtn))
         this.replayBtn.addEventListener('click', () => this.replayTo())
     }
 
@@ -153,6 +125,78 @@ export class Comment {
         comment.innerHTML = this.generateCommentTemplate()
 
         return comment
+    }
+
+    updateLocalStorage(property, value) {
+        const comments = JSON.parse(localStorage.getItem('comments'))
+        const thisComment = utils.findNestedObjectByKey(comments, "id", this.id)
+        thisComment[property] = value
+        localStorage.setItem('comments', JSON.stringify(comments))
+    }
+
+    saveToLocalStorage() {
+        setTimeout(() => {
+            const comments = JSON.parse(localStorage.getItem('comments')) || []
+            const thisComment = utils.findNestedObjectByKey(comments, "id", this.id)
+            let context = comments
+
+            if (thisComment) return
+
+            const comment = {
+                id: this.id,
+                content: this.content,
+                createdAt: this.createdAt,
+                score: this.score,
+                replyingTo: this.replyingTo,
+                user: {
+                    image: { png: this.avatar },
+                    username: this.author,
+                },
+                replies: this.getRepliesComments(this.commentElement)
+            }
+
+            if (this.replyingTo) {
+                const addresseeComment = utils.findNestedObjectByKey(comments, "id", this.replyingToID)
+                context = addresseeComment.replies
+            }
+            context.push(comment)
+            localStorage.setItem('comments', JSON.stringify(comments))
+
+        }, 500)
+    }
+
+    getRepliesComments(parentElement) {
+        const repliesCommentsArray = []
+        const repliesComments = parentElement.querySelectorAll(`.${REPLIES_LIST_CLASS} .${CLASS}`)
+
+        repliesComments.forEach(comment => {
+            const id = parseInt(comment.id.substring(7)),
+                content = comment.querySelector(`.${CONTENT_CLASS} > span`).textContent,
+                createdAt = comment.querySelector(`.${DATE_CLASS}`).textContent,
+                score = parseInt(comment.querySelector(`.${SCORE_CLASS}`).textContent),
+                replyingTo = comment.querySelector(`.${LINK_CLASS}`)?.textContent.substring(1),
+                replies = this.getRepliesComments(comment),
+                username = comment.querySelector(`.${AUTHOR_CLASS}`).childNodes[0].textContent,
+                png = '.' + new URL(
+                    comment.querySelector(`.${AVATAR_CLASS}`).src
+                ).pathname.substring(4)
+
+            repliesCommentsArray.push({
+                id,
+                content,
+                createdAt,
+                score,
+                replyingTo,
+                user: {
+                    image: {
+                        png,
+                    },
+                    username,
+                },
+                replies
+            })
+        })
+        return repliesCommentsArray
     }
 
     generateCommentTemplate() {
@@ -188,19 +232,13 @@ export class Comment {
     }
 
     generateDateCreated() {
-        return `
-            <time class="${DATE_CLASS}" datetime="2022-10-13">
-                ${this.createdAt}
-            </time>
-        `
+        return `<time class="${DATE_CLASS}">${this.createdAt}</time>`
     }
 
     generateContent(content) {
-        const addresseeID = this.context.parentNode.id
-
         return `
             ${this.replyingTo
-                ? `<a class="${LINK_CLASS}" href="#${addresseeID}">@${this.replyingTo}</a>`
+                ? `<a class="${LINK_CLASS}" href="#comment${this.replyingToID}">@${this.replyingTo}</a>`
                 : ''}
             <span>${content}</span>
         `
@@ -241,6 +279,8 @@ export class UserComment extends Comment {
         super(properties)
     }
 
+    vote() { return }
+
     edit() {
         const currentContent = this.commentContent.querySelector('span').textContent
         const openEdit = () => {
@@ -261,6 +301,7 @@ export class UserComment extends Comment {
 
             if (updateText !== '') {
                 this.commentContent.innerHTML = this.generateContent(updateText)
+                this.updateLocalStorage('content', updateText)
                 closeEdit()
             } else {
                 this.commentUpdateError.style.display = 'block'
@@ -268,24 +309,30 @@ export class UserComment extends Comment {
         })
 
         window.addEventListener('click', e => {
-            console.log(e.target.id)
             if (
                 e.target.id !== UPDATE_TEXTAREA_ID &&
                 e.target !== this.editBtn &&
-                e.target !== this.commentUpdateSubmit
+                e.target !== this.commentUpdateSubmit &&
+                e.target.className !== EDIT_ICON_CLASS
             )
                 closeEdit()
         })
-
-
-        this.editBtn.addEventListener('click', () => {
-        })
-
     }
 
     delete() {
         document.dispatchEvent(utils.openModalEvent)
         document.addEventListener('custom:delete', () => {
+            const filterByID = (a) => a.id !== this.id
+            let comments = JSON.parse(localStorage.getItem('comments'))
+
+            if (this.replyingTo) {
+                const addresseeComment = utils.findNestedObjectByKey(comments, "id", this.replyingToID)
+                addresseeComment.replies = addresseeComment.replies.filter(filterByID)
+            }
+            else comments = comments.filter(filterByID)
+
+            localStorage.setItem('comments', JSON.stringify(comments))
+
             utils.animate(this.commentElement, DELETE_MODIFIER_CLASS)
             setTimeout(() => this.commentElement.remove(), 500)
         })
@@ -305,7 +352,10 @@ export class UserComment extends Comment {
     }
 
     setEventListeners() {
-        this.editBtn.addEventListener('click', () => this.edit())
+        this.editBtn.addEventListener('click', () => {
+            console.log(this.editBtn)
+            this.edit()
+        })
         this.deleteBtn.addEventListener('click', () => this.delete())
     }
 
