@@ -65,7 +65,7 @@ export class Form {
         if (contextParent.classList.contains(comment.CLASS))
             replyToPerson = contextParent.querySelector(`.${comment.AUTHOR_CLASS}`).textContent
 
-        new comment.UserComment({
+        const userComment = new comment.UserComment({
             context: this.isStatic ? commentsSection : this.context,
             id: utils.generateID(),
             author: USER_NAME,
@@ -75,6 +75,8 @@ export class Form {
             score: 0,
             replyingTo: replyToPerson
         });
+
+        utils.animate(userComment.commentElement, comment.ANIMATION_CLASS)
 
         this.isStatic
             ? this.formTextarea.value = ''
