@@ -253,7 +253,7 @@ export class Comment {
     }
 
     generateDateCreated() {
-        return `<time class="${DATE_CLASS}">${this.createdAt}</time>`
+        return `<p class="${DATE_CLASS}">${this.createdAt}</p>`
     }
 
     generateContent(content) {

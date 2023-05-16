@@ -23,7 +23,7 @@ export function enableBtn(btn) {
 }
 
 export function disableBtn(btn) {
-    btn.setAttribute('disabled', true)
+    btn.setAttribute('disabled', '')
 }
 
 export function animate(element, animationClass, animationTime = 500) {
